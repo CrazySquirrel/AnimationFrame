@@ -1,6 +1,6 @@
 {
   "name": "AnimationFrame",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "./lib/AnimationFrame.js",
   "description": "This is the class for signing several watcher on requestanimationframe.",
   "keywords": [],
