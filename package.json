@@ -1,7 +1,9 @@
 {
   "name": "AnimationFrame",
   "version": "1.0.0",
-  "description": "",
+  "main": "./lib/AnimationFrame.js",
+  "description": "This is the class for signing several watcher on requestanimationframe.",
+  "keywords": [],
   "author": "Sergey Yastrebov <info@crazysquirrel.ru>",
   "license": "ISC",
   "repository": {
