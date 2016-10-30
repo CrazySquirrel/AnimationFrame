@@ -2,7 +2,7 @@
 declare var require: any;
 require("./index.html");
 
-import AnimationFrame from "../../lib/AnimationFrame.ts";
+let AnimationFrame = require("../../lib/AnimationFrame.js");
 
 AnimationFrame.subscribe(this, () => {
     document.body.innerText = (new Date()).getTime().toString();

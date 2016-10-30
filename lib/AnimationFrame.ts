@@ -7,29 +7,44 @@ import IWindow from "../interfaces/IWindow";
  * Declare window interface
  */
 declare var window: IWindow;
+declare var global: any;
+declare var module: any;
 
 /**
  * Import interface
  */
 import IAnimationFrame from "../interfaces/IAnimationFrame";
 
+
+let root;
+
+if (typeof window === "undefined") {
+    if (typeof global !== "undefined") {
+        root = global;
+    } else {
+        root = {};
+    }
+} else {
+    root = window;
+}
+
 /**
  * requestAnimationFrame polyfill
  */
-window.requestAnimationFrame = (() => {
+root.requestAnimationFrame = (() => {
     return (
-            window &&
+            typeof root !== "undefined" &&
             (
-                window.requestAnimationFrame ||
-                window.webkitRequestAnimationFrame ||
-                window.mozRequestAnimationFrame ||
-                window.oRequestAnimationFrame ||
-                window.msRequestAnimationFrame
+                root.requestAnimationFrame ||
+                root.webkitRequestAnimationFrame ||
+                root.mozRequestAnimationFrame ||
+                root.oRequestAnimationFrame ||
+                root.msRequestAnimationFrame
             )
         ) ||
         (
             (callback) => {
-                window.setTimeout(callback, 1000 / 60);
+                root.setTimeout(callback, 1000 / 60);
             }
         );
 })();
@@ -52,16 +67,16 @@ function bind(b) {
 
     function c() {
         if (
-            typeof window !== "undefined" &&
-            typeof window.console === "object" &&
-            typeof window.console.log === "function"
+            typeof root !== "undefined" &&
+            typeof root.console === "object" &&
+            typeof root.console.log === "function"
         ) {
-            window.console.log("Bind polyfill");
+            root.console.log("Bind polyfill");
         }
     }
 
     function d() {
-        return e.apply(this instanceof c ? this : b || window, f.concat(a.call(arguments)));
+        return e.apply(this instanceof c ? this : b || root, f.concat(a.call(arguments)));
     }
 
     /**
@@ -148,7 +163,7 @@ class AnimationFrame implements IAnimationFrame {
      * @param ID
      * @return {boolean|string}
      */
-    public subscribe(context: Object = window,
+    public subscribe(context: Object = root,
                      callback: Function = () => {
                          return null;
                      },
@@ -179,11 +194,11 @@ class AnimationFrame implements IAnimationFrame {
                  * Write to console count of the subscribed methods
                  */
                 if (
-                    typeof window !== "undefined" &&
-                    typeof window.console === "object" &&
-                    typeof window.console.info === "function"
+                    typeof root !== "undefined" &&
+                    typeof root.console === "object" &&
+                    typeof root.console.info === "function"
                 ) {
-                    window.console.info("AnimationFrame stack " + Object.keys(this.stack).length);
+                    root.console.info("AnimationFrame stack " + Object.keys(this.stack).length);
                 }
                 /**
                  * Return UID
@@ -192,11 +207,11 @@ class AnimationFrame implements IAnimationFrame {
             }
         } catch (e) {
             if (
-                typeof window !== "undefined" &&
-                typeof window.console === "object" &&
-                typeof window.console.error === "function"
+                typeof root !== "undefined" &&
+                typeof root.console === "object" &&
+                typeof root.console.error === "function"
             ) {
-                window.console.error(e);
+                root.console.error(e);
             }
         }
         /**
@@ -223,11 +238,11 @@ class AnimationFrame implements IAnimationFrame {
              * Write to console count of the subscribed methods
              */
             if (
-                typeof window !== "undefined" &&
-                typeof window.console === "object" &&
-                typeof window.console.info === "function"
+                typeof root !== "undefined" &&
+                typeof root.console === "object" &&
+                typeof root.console.info === "function"
             ) {
-                window.console.info("AnimationFrame stack " + Object.keys(this.stack).length);
+                root.console.info("AnimationFrame stack " + Object.keys(this.stack).length);
             }
         }
     }
@@ -289,11 +304,11 @@ class AnimationFrame implements IAnimationFrame {
 
                         } catch (e) {
                             if (
-                                typeof window !== "undefined" &&
-                                typeof window.console === "object" &&
-                                typeof window.console.error === "function"
+                                typeof root !== "undefined" &&
+                                typeof root.console === "object" &&
+                                typeof root.console.error === "function"
                             ) {
-                                window.console.error(e);
+                                root.console.error(e);
                             }
                         }
                     }
@@ -301,25 +316,26 @@ class AnimationFrame implements IAnimationFrame {
             }
         } catch (e) {
             if (
-                typeof window !== "undefined" &&
-                typeof window.console === "object" &&
-                typeof window.console.error === "function"
+                typeof root !== "undefined" &&
+                typeof root.console === "object" &&
+                typeof root.console.error === "function"
             ) {
-                window.console.error(e);
+                root.console.error(e);
             }
         }
         /**
          * Recall watcher
          */
-        window.requestAnimationFrame(this.watch.bind(this));
+        root.requestAnimationFrame(this.watch.bind(this));
     }
 }
 /**
  * Create single request animation frame object
  * @type {AnimationFrame}
  */
-window.AnimationFrame = window.AnimationFrame || new AnimationFrame();
+root.AnimationFrame = root.AnimationFrame || new AnimationFrame();
 /**
  * Export single AnimationFrame instance
  */
-export = window.AnimationFrame;
+export default root.AnimationFrame;
+module.exports = root.AnimationFrame;

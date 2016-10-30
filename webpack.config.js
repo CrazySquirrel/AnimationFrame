@@ -38,7 +38,7 @@ objBuildList = Object.assign(
     {
         "./lib/AnimationFrame": ["./lib/AnimationFrame.ts"],
         "./dist/simple-typescript-example/index": ["./src/simple-typescript-example/index.ts"],
-        "./dist/simple-javascript-example/index": ["./src/simple-typescript-example/index.ts"],
+        "./dist/simple-javascript-example/index": ["./src/simple-javascript-example/index.ts"],
     }
 );
 

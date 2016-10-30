@@ -10,7 +10,7 @@
     "animations"
   ],
   "author": "Sergey Yastrebov <info@crazysquirrel.ru>",
-  "license": "ISC",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git@github.com:CrazySquirrel/AnimationFrame.git"
