@@ -12,7 +12,7 @@ interface IAnimationFrame {
      */
     subscribe(context: Object,
               callback: Function,
-              params: Array<any>,
+              params?: Array<any>,
               ID?: string): boolean|string;
 
     /**

@@ -1,26 +1,32 @@
 "use strict";
 
-const NODE_ENV = process.env.NODE_ENV || 'development';
+const NODE_ENV = process.env.NODE_ENV || "development";
 
 const CompressionPlugin = require("compression-webpack-plugin");
 
 const StringReplacePlugin = require("string-replace-webpack-plugin");
 
-const WebpackNotifierPlugin = require('webpack-notifier');
+const WebpackNotifierPlugin = require("webpack-notifier");
 
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+const BrowserSyncPlugin = require("browser-sync-webpack-plugin");
 
-const path = require('path');
+const CleanWebpackPlugin = require("clean-webpack-plugin");
 
-const webpack = require('webpack');
+const path = require("path");
+
+const webpack = require("webpack");
 
 const fs = require("fs");
 
-const crypto = require('crypto');
+const crypto = require("crypto");
 
-const compress = require('compression');
+const compress = require("compression");
 
-const packagenpm = require('./package.json');
+const packagenpm = require("./package.json");
+
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+
+let extractHTML = new ExtractTextPlugin("[name].html");
 
 let objBuildList = {};
 
@@ -30,7 +36,9 @@ let objBuildList = {};
 objBuildList = Object.assign(
     objBuildList,
     {
-        "./lib/AnimationFrame":"./lib/AnimationFrame.ts"
+        "./lib/AnimationFrame": ["./lib/AnimationFrame.ts"],
+        "./dist/simple-typescript-example/index": ["./src/simple-typescript-example/index.ts"],
+        "./dist/simple-javascript-example/index": ["./src/simple-javascript-example/index.ts"],
     }
 );
 
@@ -39,7 +47,8 @@ objBuildList = Object.assign(
  */
 let arrPlugins = [
     new WebpackNotifierPlugin(),
-    new StringReplacePlugin()
+    new StringReplacePlugin(),
+    extractHTML
 ];
 /**
  * Add BrowserSync for development mode
@@ -50,7 +59,7 @@ if (NODE_ENV == "development" || NODE_ENV == "production") {
             host: "localhost",
             port: 8080,
             server: {
-                baseDir: ['./'],
+                baseDir: ["./"],
                 middleware: function (req, res, next) {
                     var gzip = compress();
                     gzip(req, res, next);
@@ -90,25 +99,31 @@ if (NODE_ENV == "production" || NODE_ENV == "testing") {
  */
 arrPlugins.push(
     new webpack.DefinePlugin({
-        'process.env': {
+        "process.env": {
             NODE_ENV: JSON.stringify(NODE_ENV)
         }
     })
 );
 
+arrPlugins.push(
+    new CleanWebpackPlugin([
+        "./dist"
+    ])
+);
+
+
 module.exports = {
     entry: objBuildList,
     output: {
-        filename: "[name].js",
-        libraryTarget: "commonjs2"
+        filename: "[name].js"
     },
-    devtool: (NODE_ENV == "development" ? 'inline-source-map' : (NODE_ENV == "testing" ? 'inline-source-map' : '')),
+    devtool: (NODE_ENV == "development" ? "inline-source-map" : (NODE_ENV == "testing" ? "inline-source-map" : "")),
     plugins: arrPlugins,
     resolve: {
-        extensions: ['', '.webpack.js', '.web.js', '.ts', '.tsx', '.js']
+        extensions: ["", ".webpack.js", ".web.js", ".ts", ".tsx", ".js"]
     },
     resolveLoader: {
-        root: path.join(__dirname, 'node_modules')
+        root: path.join(__dirname, "node_modules")
     },
     module: {
         loaders: [
@@ -120,7 +135,7 @@ module.exports = {
                             {
                                 pattern: /#HASH#/gi,
                                 replacement: function (string, pattern1) {
-                                    return crypto.createHash('md5').update((new Date()).getTime().toString()).digest('hex');
+                                    return crypto.createHash("md5").update((new Date()).getTime().toString()).digest("hex");
                                 }
                             },
                             {
@@ -137,10 +152,14 @@ module.exports = {
                             }
                         ]
                     }),
-                    'babel-loader?presets[]=babel-preset-es2015-loose',
-                    'ts-loader'
+                    "babel-loader?presets[]=babel-preset-es2015-loose",
+                    "ts-loader"
                 ],
                 exclude: /node_modules/
+            },
+            {
+                test: /\.html/i,
+                loader: extractHTML.extract(["html"])
             }
         ]
     }

@@ -2,7 +2,7 @@
 /**
  * Import interfaces
  */
-import IWindow from "../Interfaces/IWindow";
+import IWindow from "../interfaces/IWindow";
 /**
  * Declare window interface
  */
@@ -11,7 +11,7 @@ declare var window: IWindow;
 /**
  * Import interface
  */
-import IAnimationFrame from "../Interfaces/IAnimationFrame";
+import IAnimationFrame from "../interfaces/IAnimationFrame";
 
 /**
  * requestAnimationFrame polyfill
@@ -36,91 +36,91 @@ window.requestAnimationFrame = (() => {
 /**
  * Bind polyfill
  */
-if (!Function.prototype.bind) {
-    function bind(b) {
-        /**
-         * If try bind variable that not a function, then throw error
-         */
-        if (typeof this !== "function") {
-            throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+function bind(b) {
+    /**
+     * If try bind variable that not a function, then throw error
+     */
+    if (typeof this !== "function") {
+        throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+    }
+    /**
+     * let Array slice function
+     */
+    let a = Array.prototype.slice;
+    let f = a.call(arguments, 1);
+    let e = this;
+
+    function c() {
+        if (
+            typeof window !== "undefined" &&
+            typeof window.console === "object" &&
+            typeof window.console.log === "function"
+        ) {
+            window.console.log("Bind polyfill");
         }
-        /**
-         * let Array slice function
-         */
-        let a = Array.prototype.slice;
-        let f = a.call(arguments, 1);
-        let e = this;
-
-        function c() {
-
-        }
-
-        function d() {
-            return e.apply(this instanceof c ? this : b || window, f.concat(a.call(arguments)));
-        }
-
-        /**
-         * Registered this prototype as prototype to bind implementation functions
-         */
-        c.prototype = this.prototype;
-        d.prototype = new c();
-        /**
-         * Return bind polyfill
-         */
-        return d;
     }
 
-    Function.prototype.bind = bind;
+    function d() {
+        return e.apply(this instanceof c ? this : b || window, f.concat(a.call(arguments)));
+    }
+
+    /**
+     * Registered this prototype as prototype to bind implementation functions
+     */
+    c.prototype = this.prototype;
+    d.prototype = new c();
+    /**
+     * Return bind polyfill
+     */
+    return d;
 }
+Function.prototype.bind = Function.prototype.bind || bind;
 /**
  * Object.keys polyfill
  */
-if (!Object.keys) {
-    function keys() {
-        let hasDoNotEnumBug = !({toString: null}).propertyIsEnumerable("toString");
-        let doNotEnums = [
-            "toString",
-            "toLocaleString",
-            "valueOf",
-            "hasOwnProperty",
-            "isPrototypeOf",
-            "propertyIsEnumerable",
-            "constructor",
-        ];
-        let doNotEnumsLength = doNotEnums.length;
+function keys() {
+    let hasDoNotEnumBug = !({toString: null}).propertyIsEnumerable("toString");
+    let doNotEnums = [
+        "toString",
+        "toLocaleString",
+        "valueOf",
+        "hasOwnProperty",
+        "isPrototypeOf",
+        "propertyIsEnumerable",
+        "constructor",
+    ];
+    let doNotEnumsLength = doNotEnums.length;
 
-        return (
-            (obj) => {
-                if (typeof obj !== "object" && (typeof obj !== "function" || obj === null)) {
-                    throw new TypeError("Object.keys called on non-object");
-                }
-
-                let result = [];
-
-                for (let prop in obj) {
-                    if (Object.prototype.hasOwnProperty.call(obj, prop)) {
-                        result.push(prop);
-                    }
-                }
-
-                if (hasDoNotEnumBug) {
-                    for (let i = 0; i < doNotEnumsLength; i++) {
-                        if (Object.prototype.hasOwnProperty.call(obj, doNotEnums[i])) {
-                            result.push(doNotEnums[i]);
-                        }
-                    }
-                }
-                return result;
+    return (
+        (obj) => {
+            if (typeof obj !== "object" && (typeof obj !== "function" || obj === null)) {
+                throw new TypeError("Object.keys called on non-object");
             }
-        );
-    }
 
-    Object.keys = keys();
+            let result = [];
+
+            for (let prop in obj) {
+                if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+                    result.push(prop);
+                }
+            }
+
+            if (hasDoNotEnumBug) {
+                for (let i = 0; i < doNotEnumsLength; i++) {
+                    if (Object.prototype.hasOwnProperty.call(obj, doNotEnums[i])) {
+                        result.push(doNotEnums[i]);
+                    }
+                }
+            }
+            return result;
+        }
+    );
 }
+Object.keys = Object.keys || keys();
 /**
  * Request animation frame call stack class
  */
-export default class AnimationFrame implements IAnimationFrame {
+class AnimationFrame implements IAnimationFrame {
     /**
      * Callback list
      */
@@ -148,7 +148,7 @@ export default class AnimationFrame implements IAnimationFrame {
      * @param ID
      * @return {boolean|string}
      */
-    public subscribe(context: Object,
+    public subscribe(context: Object = window,
                      callback: Function = () => {
                          return null;
                      },
@@ -160,9 +160,7 @@ export default class AnimationFrame implements IAnimationFrame {
              */
             if (
                 typeof context === "object" &&
-                typeof callback === "function" &&
-                context &&
-                callback
+                typeof callback === "function"
             ) {
                 /**
                  * Create UID
@@ -178,14 +176,28 @@ export default class AnimationFrame implements IAnimationFrame {
                     params,
                 };
                 /**
+                 * Write to console count of the subscribed methods
+                 */
+                if (
+                    typeof window !== "undefined" &&
+                    typeof window.console === "object" &&
+                    typeof window.console.info === "function"
+                ) {
+                    window.console.info("AnimationFrame stack " + Object.keys(this.stack).length);
+                }
+                /**
                  * Return UID
                  */
                 return localID;
             }
         } catch (e) {
-            /**
-             * TODO: Error handler
-             */
+            if (
+                typeof window !== "undefined" &&
+                typeof window.console === "object" &&
+                typeof window.console.error === "function"
+            ) {
+                window.console.error(e);
+            }
         }
         /**
          * If something goes wrong return false
@@ -207,6 +219,16 @@ export default class AnimationFrame implements IAnimationFrame {
              */
             this.stack[ID] = false;
             delete this.stack[ID];
+            /**
+             * Write to console count of the subscribed methods
+             */
+            if (
+                typeof window !== "undefined" &&
+                typeof window.console === "object" &&
+                typeof window.console.info === "function"
+            ) {
+                window.console.info("AnimationFrame stack " + Object.keys(this.stack).length);
+            }
         }
     }
 
@@ -266,17 +288,25 @@ export default class AnimationFrame implements IAnimationFrame {
                             }
 
                         } catch (e) {
-                            /**
-                             * TODO: Error handler
-                             */
+                            if (
+                                typeof window !== "undefined" &&
+                                typeof window.console === "object" &&
+                                typeof window.console.error === "function"
+                            ) {
+                                window.console.error(e);
+                            }
                         }
                     }
                 }
             }
         } catch (e) {
-            /**
-             * TODO: Error handler
-             */
+            if (
+                typeof window !== "undefined" &&
+                typeof window.console === "object" &&
+                typeof window.console.error === "function"
+            ) {
+                window.console.error(e);
+            }
         }
         /**
          * Recall watcher
@@ -284,3 +314,12 @@ export default class AnimationFrame implements IAnimationFrame {
         window.requestAnimationFrame(this.watch.bind(this));
     }
 }
+/**
+ * Create single request animation frame object
+ * @type {AnimationFrame}
+ */
+window.AnimationFrame = window.AnimationFrame || new AnimationFrame();
+/**
+ * Export single AnimationFrame instance
+ */
+export default window.AnimationFrame;
