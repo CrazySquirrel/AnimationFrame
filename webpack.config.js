@@ -38,7 +38,7 @@ objBuildList = Object.assign(
     {
         "./lib/AnimationFrame": ["./lib/AnimationFrame.ts"],
         "./dist/simple-typescript-example/index": ["./src/simple-typescript-example/index.ts"],
-        "./dist/simple-javascript-example/index": ["./src/simple-javascript-example/index.ts"],
+        "./dist/simple-javascript-example/index": ["./src/simple-typescript-example/index.ts"],
     }
 );
 
@@ -115,7 +115,13 @@ arrPlugins.push(
 module.exports = {
     entry: objBuildList,
     output: {
-        filename: "[name].js"
+        filename: "[name].js",
+        library: "AnimationFrame",
+        libraryTarget: "umd",
+        umdNamedDefine: true
+    },
+    externals: {
+        "AnimationFrame": "window.AnimationFrame"
     },
     devtool: (NODE_ENV == "development" ? "inline-source-map" : (NODE_ENV == "testing" ? "inline-source-map" : "")),
     plugins: arrPlugins,
@@ -123,7 +129,8 @@ module.exports = {
         extensions: ["", ".webpack.js", ".web.js", ".ts", ".tsx", ".js"]
     },
     resolveLoader: {
-        root: path.join(__dirname, "node_modules")
+        root: path.join(__dirname, "node_modules"),
+        extensions: ["", ".js", ".ts", ".jsx", ".tsx"]
     },
     module: {
         loaders: [

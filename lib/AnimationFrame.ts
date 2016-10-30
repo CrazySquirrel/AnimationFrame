@@ -322,4 +322,4 @@ window.AnimationFrame = window.AnimationFrame || new AnimationFrame();
 /**
  * Export single AnimationFrame instance
  */
-export default window.AnimationFrame;
+export = window.AnimationFrame;
