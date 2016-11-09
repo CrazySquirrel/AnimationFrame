@@ -24,7 +24,7 @@
     "testing:watch": "NODE_ENV=testing webpack --config=webpack.config.js --watch",
     "stats": "NODE_ENV=development webpack --bail --config=webpack.config.js --profile --json > ./doc/stats.json",
     "docs": "rm -rf ./doc/js/ && typedoc --mode file --target ES6 --module 'commonjs' --out ./doc/js/ ./src/ts/",
-    "publish": "npm update && npm run production && git status && git add . && git commit -am 'Auto publish' && git push origin master && npm version patch && git push --tags && npm publish"
+    "publish": "npm update && npm run production && git commit -am 'Auto publish' && npm version patch && git push --tags && npm publish"
   },
   "pre-commit": [],
   "eslintConfig": {
