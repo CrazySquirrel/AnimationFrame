@@ -66,6 +66,7 @@ function bind(b) {
     let e = this;
 
     function c() {
+        /*
         if (
             typeof root !== "undefined" &&
             typeof root.console === "object" &&
@@ -73,6 +74,7 @@ function bind(b) {
         ) {
             root.console.log("Bind polyfill");
         }
+        */
     }
 
     function d() {
@@ -193,6 +195,7 @@ class AnimationFrame implements IAnimationFrame {
                 /**
                  * Write to console count of the subscribed methods
                  */
+                /*
                 if (
                     typeof root !== "undefined" &&
                     typeof root.console === "object" &&
@@ -200,12 +203,14 @@ class AnimationFrame implements IAnimationFrame {
                 ) {
                     root.console.info("AnimationFrame stack " + Object.keys(this.stack).length);
                 }
+                */
                 /**
                  * Return UID
                  */
                 return localID;
             }
         } catch (e) {
+            /*
             if (
                 typeof root !== "undefined" &&
                 typeof root.console === "object" &&
@@ -213,6 +218,7 @@ class AnimationFrame implements IAnimationFrame {
             ) {
                 root.console.error(e);
             }
+            */
         }
         /**
          * If something goes wrong return false
@@ -237,6 +243,7 @@ class AnimationFrame implements IAnimationFrame {
             /**
              * Write to console count of the subscribed methods
              */
+            /*
             if (
                 typeof root !== "undefined" &&
                 typeof root.console === "object" &&
@@ -244,6 +251,7 @@ class AnimationFrame implements IAnimationFrame {
             ) {
                 root.console.info("AnimationFrame stack " + Object.keys(this.stack).length);
             }
+            */
         }
     }
 
@@ -303,6 +311,7 @@ class AnimationFrame implements IAnimationFrame {
                             }
 
                         } catch (e) {
+                            /*
                             if (
                                 typeof root !== "undefined" &&
                                 typeof root.console === "object" &&
@@ -310,11 +319,13 @@ class AnimationFrame implements IAnimationFrame {
                             ) {
                                 root.console.error(e);
                             }
+                            */
                         }
                     }
                 }
             }
         } catch (e) {
+            /*
             if (
                 typeof root !== "undefined" &&
                 typeof root.console === "object" &&
@@ -322,6 +333,7 @@ class AnimationFrame implements IAnimationFrame {
             ) {
                 root.console.error(e);
             }
+            */
         }
         /**
          * Recall watcher
