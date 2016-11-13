@@ -1,3 +1,7 @@
+## [1.0.5-1.0.10] - 2016-11-13
+### Changed
+- Builder process was changed
+- Notifications was removed
 ## [1.0.4] - 2016-10-30
 ### Changed
 - Window scope was fixed
