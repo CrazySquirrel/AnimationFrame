@@ -170,59 +170,39 @@ class AnimationFrame implements IAnimationFrame {
                      },
                      params: Array<any> = [],
                      ID?: string): boolean|string {
-        try {
-            /**
-             * If context and callback passed and they are object and function
-             */
-            if (
-                typeof context === "object" &&
-                typeof callback === "function"
-            ) {
-                /**
-                 * Create UID
-                 */
-                let d = new Date();
-                let localID = ID || "x-" + d.getTime() + "-" + Math.round(Math.random() * 1e6);
-                /**
-                 * Add method to the stack
-                 */
-                this.stack[localID] = {
-                    context,
-                    callback,
-                    params,
-                };
-                /**
-                 * Write to console count of the subscribed methods
-                 */
-                /*
-                 if (
-                 typeof root !== "undefined" &&
-                 typeof root.console === "object" &&
-                 typeof root.console.info === "function"
-                 ) {
-                 root.console.info("AnimationFrame stack " + Object.keys(this.stack).length);
-                 }
-                 */
-                /**
-                 * Return UID
-                 */
-                return localID;
-            }
-        } catch (e) {
-            /*
-             if (
-             typeof root !== "undefined" &&
-             typeof root.console === "object" &&
-             typeof root.console.error === "function"
-             ) {
-             root.console.error(e);
-             }
-             */
-        }
         /**
-         * If something goes wrong return false
+         * If context and callback passed and they are object and function
          */
-        return false;
+        if (
+            typeof context === "object" &&
+            typeof callback === "function" &&
+            typeof params === "object" &&
+            Array.isArray(params) &&
+            (ID === undefined || typeof ID === "string")
+        ) {
+            /**
+             * Create UID
+             */
+            let d = new Date();
+            let localID = ID || "x-" + d.getTime() + "-" + Math.round(Math.random() * 1e6);
+            /**
+             * Add method to the stack
+             */
+            this.stack[localID] = {
+                context,
+                callback,
+                params,
+            };
+            /**
+             * Write to console count of the subscribed methods
+             */
+            /**
+             * Return UID
+             */
+            return localID;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -230,27 +210,20 @@ class AnimationFrame implements IAnimationFrame {
      * @param ID
      */
     public unsubscribe(ID: string): void {
-        /**
-         * If required method exist in the stack
-         */
-        if (this.stack[ID]) {
+        if (typeof ID === "string") {
             /**
-             * Nullify method in the stack and destroy it
+             * If required method exist in the stack
              */
-            this.stack[ID] = false;
-            delete this.stack[ID];
-            /**
-             * Write to console count of the subscribed methods
-             */
-            /*
-             if (
-             typeof root !== "undefined" &&
-             typeof root.console === "object" &&
-             typeof root.console.info === "function"
-             ) {
-             root.console.info("AnimationFrame stack " + Object.keys(this.stack).length);
-             }
-             */
+            if (this.stack[ID]) {
+                /**
+                 * Nullify method in the stack and destroy it
+                 */
+                this.stack[ID] = false;
+                delete this.stack[ID];
+                /**
+                 * Write to console count of the subscribed methods
+                 */
+            }
         }
     }
 
