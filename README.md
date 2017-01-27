@@ -14,7 +14,7 @@ The repository contains pre-compiled files, but if you want to add your files an
 
 or
 
-* npm run development
+* npm run development 
 
 The build required NodeJs version 6 or higher.
 
