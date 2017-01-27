@@ -1,7 +1,8 @@
 # AnimationFrame
 [![npm version](https://badge.fury.io/js/AnimationFrame.svg)](https://github.com/CrazySquirrel/AnimationFrame)
-[![license](https://img.shields.io/github/license/CrazySquirrel/AnimationFrame.svg)](https://github.com/CrazySquirrel/AnimationFrame)
 [![Github All Releases](https://img.shields.io/github/downloads/CrazySquirrel/AnimationFrame/total.svg)](https://github.com/CrazySquirrel/AnimationFrame)
+[![Travis branch](https://img.shields.io/travis/CrazySquirrel/AnimationFrame/master.svg)](https://github.com/CrazySquirrel/AnimationFrame)
+[![license](https://img.shields.io/github/license/CrazySquirrel/AnimationFrame.svg)](https://github.com/CrazySquirrel/AnimationFrame)
 [![npm version](https://img.shields.io/badge/donate-%E2%99%A5-red.svg)](http://crazysquirrel.ru/support/)
 
 This is the class for signing several watcher on requestanimationframe.
