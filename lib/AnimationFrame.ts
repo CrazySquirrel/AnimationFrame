@@ -140,16 +140,26 @@ class AnimationFrame implements IAnimationFrame {
     /**
      * Callback list
      */
+    private parallelStack: any;
+    private serialStack: any;
     private stack: any;
+
+    private serialID: number;
 
     /**
      * Create request animation frame
      */
     constructor() {
+        this.serialID = 0;
         /**
          * Subscribed methods
          */
-        this.stack = {};
+        this.parallelStack = {};
+        this.serialStack = {};
+        /**
+         * Backward compatibility
+         */
+        this.stack = this.parallelStack;
         /**
          * Start requestAnimationFrame watcher
          */
@@ -170,36 +180,59 @@ class AnimationFrame implements IAnimationFrame {
                      },
                      params: Array<any> = [],
                      ID?: string): boolean|string {
-        /**
-         * If context and callback passed and they are object and function
-         */
-        if (
-            typeof context === "object" &&
-            typeof callback === "function" &&
-            typeof params === "object" &&
-            Array.isArray(params) &&
-            (ID === undefined || typeof ID === "string")
-        ) {
-            /**
-             * Create UID
-             */
-            let d = new Date();
-            let localID = ID || "x-" + d.getTime() + "-" + Math.round(Math.random() * 1e6);
+        return this.parallelSubscribe({
+            context,
+            callback,
+            params,
+            ID,
+        });
+    }
+
+    /**
+     * Parallel callback subscribe
+     * @param _params
+     * @return {boolean|string}
+     */
+    public parallelSubscribe(_params): boolean|string {
+        _params = this.prepareParams(_params);
+        if (_params) {
             /**
              * Add method to the stack
              */
-            this.stack[localID] = {
-                context,
-                callback,
-                params,
+            this.parallelStack[_params.ID] = {
+                callback: _params.callback,
+                context: _params.context,
+                params: _params.params,
             };
             /**
-             * Write to console count of the subscribed methods
+             * Return subscription ID
              */
+            return _params.ID;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Serial callback subscribe
+     * @param _params
+     * @return {boolean|string}
+     */
+    public serialSubscribe(_params): boolean|string {
+        _params = this.prepareParams(_params);
+        if (_params) {
             /**
-             * Return UID
+             * Add method to the stack
              */
-            return localID;
+            this.serialStack[_params.ID] = {
+                callback: _params.callback,
+                context: _params.context,
+                params: _params.params,
+            };
+            /**
+             * Return subscription ID
+             */
+            return _params.ID;
         } else {
             return false;
         }
@@ -210,20 +243,82 @@ class AnimationFrame implements IAnimationFrame {
      * @param ID
      */
     public unsubscribe(ID: string): void {
+        this.parallelUnsubscribe(ID);
+    }
+
+    /**
+     * Parallel callback unsubscribe
+     * @param ID
+     */
+    public parallelUnsubscribe(ID: string): void {
         if (typeof ID === "string") {
             /**
              * If required method exist in the stack
              */
-            if (this.stack[ID]) {
+            if (this.parallelStack[ID]) {
                 /**
                  * Nullify method in the stack and destroy it
                  */
-                this.stack[ID] = false;
-                delete this.stack[ID];
-                /**
-                 * Write to console count of the subscribed methods
-                 */
+                this.parallelStack[ID] = false;
+                delete this.parallelStack[ID];
             }
+        }
+    }
+
+    /**
+     * Serial callback unsubscribe method by ID
+     * @param ID
+     */
+    public serialUnsubscribe(ID: string): void {
+        if (typeof ID === "string") {
+            /**
+             * If required method exist in the stack
+             */
+            if (this.serialStack[ID]) {
+                /**
+                 * Nullify method in the stack and destroy it
+                 */
+                this.serialStack[ID] = false;
+                delete this.serialStack[ID];
+            }
+        }
+    }
+
+    /**
+     * Prepare subscription params
+     * @param _params
+     * @return {boolean}
+     */
+    private prepareParams(_params): boolean|string {
+        if (
+            typeof _params === "object"
+        ) {
+            let d = new Date();
+            /**
+             * Prepare params
+             */
+            _params.context = _params.context || root;
+            _params.callback = _params.callback || (() => {
+                    return null;
+                });
+            _params.params = _params.params || [];
+            _params.ID = _params.ID || "x-" + d.getTime() + "-" + Math.round(Math.random() * 1e6);
+            /**
+             * Check params
+             */
+            if (
+                typeof _params.context === "object" &&
+                typeof _params.callback === "function" &&
+                typeof _params.params === "object" &&
+                Array.isArray(_params.params) &&
+                typeof _params.ID === "string"
+            ) {
+                return _params;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
         }
     }
 
@@ -232,35 +327,59 @@ class AnimationFrame implements IAnimationFrame {
      */
     private watch(): void {
         try {
+            this.parallelWatch();
+        } catch (e) {
+            /**
+             * TODO: add logger
+             */
+        }
+        try {
+            this.serialWatch();
+        } catch (e) {
+            /**
+             * TODO: add logger
+             */
+        }
+        /**
+         * Recall watcher
+         */
+        root.requestAnimationFrame(this.watch.bind(this));
+    }
+
+    /**
+     * Watch and call methods
+     */
+    private parallelWatch(): void {
+        try {
             /**
              * If stack exist, it is an object and it is contains methods
              */
             if (
-                this.stack &&
-                typeof this.stack === "object" &&
-                Object.keys(this.stack).length > 0
+                this.parallelStack &&
+                typeof this.parallelStack === "object" &&
+                Object.keys(this.parallelStack).length > 0
             ) {
                 /**
                  * Loop all methods in stack
                  */
-                for (let ID in this.stack) {
+                for (let parallelID in this.parallelStack) {
                     /**
                      * Process only methods without extended properties
                      */
-                    if (this.stack.hasOwnProperty(ID)) {
+                    if (this.parallelStack.hasOwnProperty(parallelID)) {
                         try {
 
                             /**
                              * If ID exist and it is a string
                              */
                             if (
-                                ID &&
-                                typeof ID === "string"
+                                parallelID &&
+                                typeof parallelID === "string"
                             ) {
                                 /**
                                  * Get subscribed method params by ID
                                  */
-                                let objCall = this.stack[ID];
+                                let objCall = this.parallelStack[parallelID];
                                 /**
                                  * If params exist, it is an object, and it is contains call context,
                                  * callback, and parameters which is array
@@ -283,34 +402,87 @@ class AnimationFrame implements IAnimationFrame {
                             }
 
                         } catch (e) {
-                            /*
-                             if (
-                             typeof root !== "undefined" &&
-                             typeof root.console === "object" &&
-                             typeof root.console.error === "function"
-                             ) {
-                             root.console.error(e);
-                             }
+                            /**
+                             * TODO: add logger
                              */
                         }
                     }
                 }
             }
         } catch (e) {
-            /*
-             if (
-             typeof root !== "undefined" &&
-             typeof root.console === "object" &&
-             typeof root.console.error === "function"
-             ) {
-             root.console.error(e);
-             }
+            /**
+             * TODO: add logger
              */
         }
-        /**
-         * Recall watcher
-         */
-        root.requestAnimationFrame(this.watch.bind(this));
+    }
+
+    /**
+     * Watch and call methods
+     */
+    private serialWatch(): void {
+        try {
+            /**
+             * If stack exist, it is an object and it is contains methods
+             */
+            if (
+                this.serialStack &&
+                typeof this.serialStack === "object"
+            ) {
+                let keys = Object.keys(this.serialStack);
+                if (
+                    keys &&
+                    keys.length > 0
+                ) {
+                    if (this.serialID >= keys.length) {
+                        this.serialID = 0;
+                    }
+
+                    let _serialID = keys[this.serialID];
+
+                    this.serialID++;
+                    /**
+                     * Process only methods without extended properties
+                     */
+                    if (this.serialStack.hasOwnProperty(_serialID)) {
+                        /**
+                         * If ID exist and it is a string
+                         */
+                        if (
+                            _serialID &&
+                            typeof _serialID === "string"
+                        ) {
+                            /**
+                             * Get subscribed method params by ID
+                             */
+                            let objCall = this.serialStack[_serialID];
+                            /**
+                             * If params exist, it is an object, and it is contains call context,
+                             * callback, and parameters which is array
+                             */
+                            if (
+                                objCall &&
+                                typeof objCall === "object" &&
+                                objCall.context &&
+                                objCall.callback &&
+                                objCall.params &&
+                                typeof objCall.context === "object" &&
+                                typeof objCall.callback === "function" &&
+                                Array.isArray(objCall.params)
+                            ) {
+                                /**
+                                 * Call subscribed method
+                                 */
+                                objCall.callback.apply(objCall.context, objCall.params);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (e) {
+            /**
+             * TODO: add logger
+             */
+        }
     }
 }
 /**
