@@ -1,13 +1,7 @@
 language: node_js
-node_js:
-  - "6"
-install:
-  - npm install
-script:
-  - npm run production
-branches:
-  only:
-    - master
+node_js: '6'
+install: npm install
+script: npm run production
 deploy:
   provider: npm
   email: 'info@crazysquirrel.ru'
@@ -16,8 +10,3 @@ deploy:
   on:
     tags: true
     branch: master
-cache:
-  yarn: true
-  directories:
-    - node_modules
-group: deprecated
