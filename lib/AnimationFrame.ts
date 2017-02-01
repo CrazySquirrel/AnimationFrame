@@ -6,9 +6,10 @@ import IWindow from "../interfaces/IWindow";
 /**
  * Declare window interface
  */
-declare var window: IWindow;
-declare var global: any;
-declare var module: any;
+declare let window: IWindow;
+declare let global: any;
+declare let module: any;
+declare let require: any;
 
 /**
  * Import interface
@@ -137,12 +138,12 @@ Object.keys = Object.keys || keys();
  * Request animation frame call stack class
  */
 class AnimationFrame implements IAnimationFrame {
-    /**
-     * Callback list
-     */
-    private parallelStack: any;
-    private serialStack: any;
-    private stack: any;
+
+    public version: string;
+
+    public parallelStack: any;
+    public serialStack: any;
+    public stack: any;
 
     private serialID: number;
 
@@ -150,6 +151,8 @@ class AnimationFrame implements IAnimationFrame {
      * Create request animation frame
      */
     constructor() {
+        this.version = "#PACKAGE_VERSION#";
+
         this.serialID = 0;
         /**
          * Subscribed methods
@@ -486,10 +489,117 @@ class AnimationFrame implements IAnimationFrame {
     }
 }
 /**
+ * Check version
+ */
+function version_lt(v1, v2) {
+    if (
+        typeof v1 === "string" &&
+        typeof v2 === "string"
+    ) {
+        v1 = v1.trim().split(".");
+        v2 = v2.trim().split(".");
+        for (let i = 0; i < v1.length; i++) {
+            v1[i] = v1[i] || 0;
+            v2[i] = v2[i] || 0;
+            if (v1[i] > v2[i]) {
+                return false;
+            } else if (v1[i] < v2[i]) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+/**
  * Create single request animation frame object
  * @type {AnimationFrame}
  */
-root.AnimationFrame = root.AnimationFrame || new AnimationFrame();
+if (
+    !root.AnimationFrame || !root.AnimationFrame.version ||
+    version_lt(root.AnimationFrame.version, "#PACKAGE_VERSION#")
+) {
+    Object.defineProperty(root, "AnimationFrame", {
+        configurable: true,
+        enumerable: false,
+        get: () => {
+            if (!root._AnimationFrame) {
+                root.AnimationFrame = new AnimationFrame();
+            }
+            return root._AnimationFrame;
+        },
+        set: () => {
+            if (!root._AnimationFrame) {
+                /**
+                 * root._AnimationFrame was empty and can be set
+                 */
+                root._AnimationFrame = new AnimationFrame();
+            } else if (
+                !root._AnimationFrame.version ||
+                version_lt(root._AnimationFrame.version, "#PACKAGE_VERSION#")
+            ) {
+                /**
+                 * In root._AnimationFrame was previous version and it should migrate
+                 */
+                let newAnimationFrame = new AnimationFrame();
+                /**
+                 * Migrate subscriptions
+                 */
+                if (typeof root._AnimationFrame.parallelStack === "object") {
+                    /**
+                     * Migrate parallel subscriptions
+                     */
+                    for (let ID in root._AnimationFrame.parallelStack) {
+                        if (root._AnimationFrame.parallelStack.hasOwnProperty(ID)) {
+                            newAnimationFrame.parallelSubscribe({
+                                callback: root._AnimationFrame.parallelStack[ID].callback,
+                                context: root._AnimationFrame.parallelStack[ID].context,
+                                params: root._AnimationFrame.parallelStack[ID].params,
+                                ID,
+                            });
+                            root._AnimationFrame.parallelUnsubscribe(ID);
+                        }
+                    }
+                } else if (typeof root._AnimationFrame.stack === "object") {
+                    /**
+                     * Migrate serial subscriptions
+                     */
+                    for (let ID in root._AnimationFrame.stack) {
+                        if (root._AnimationFrame.stack.hasOwnProperty(ID)) {
+                            newAnimationFrame.subscribe(
+                                root._AnimationFrame.stack[ID].context,
+                                root._AnimationFrame.stack[ID].callback,
+                                root._AnimationFrame.stack[ID].params,
+                                root._AnimationFrame.stack[ID].ID
+                            );
+                            root._AnimationFrame.unsubscribe(ID);
+                        }
+                    }
+                }
+                if (typeof root._AnimationFrame.serialStack === "object") {
+                    /**
+                     * Migrate serial subscriptions
+                     */
+                    for (let ID in root._AnimationFrame.serialStack) {
+                        if (root._AnimationFrame.serialStack.hasOwnProperty(ID)) {
+                            newAnimationFrame.serialSubscribe({
+                                callback: root._AnimationFrame.serialStack[ID].callback,
+                                context: root._AnimationFrame.serialStack[ID].context,
+                                params: root._AnimationFrame.serialStack[ID].params,
+                                ID,
+                            });
+                            root._AnimationFrame.serialUnsubscribe(ID);
+                        }
+                    }
+                }
+                /**
+                 * Set new AnimationFrame
+                 */
+                root._AnimationFrame = newAnimationFrame;
+            }
+        },
+    });
+}
+root.AnimationFrame = new AnimationFrame();
 /**
  * Export single AnimationFrame instance
  */
