@@ -11,6 +11,8 @@ declare let global: any;
 declare let module: any;
 declare let require: any;
 
+const VERSION = "1.0.22";
+
 /**
  * Import interface
  */
@@ -151,7 +153,7 @@ class AnimationFrame implements IAnimationFrame {
      * Create request animation frame
      */
     constructor() {
-        this.version = "#PACKAGE_VERSION#";
+        this.version = VERSION;
 
         this.serialID = 0;
         /**
@@ -516,7 +518,7 @@ function version_lt(v1, v2) {
  */
 if (
     !root.AnimationFrame || !root.AnimationFrame.version ||
-    version_lt(root.AnimationFrame.version, "#PACKAGE_VERSION#")
+    version_lt(root.AnimationFrame.version, VERSION)
 ) {
     Object.defineProperty(root, "AnimationFrame", {
         configurable: true,
@@ -535,7 +537,7 @@ if (
                 root._AnimationFrame = new AnimationFrame();
             } else if (
                 !root._AnimationFrame.version ||
-                version_lt(root._AnimationFrame.version, "#PACKAGE_VERSION#")
+                version_lt(root._AnimationFrame.version, VERSION)
             ) {
                 /**
                  * In root._AnimationFrame was previous version and it should migrate
