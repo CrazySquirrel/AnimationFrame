@@ -17,4 +17,4 @@ exclude_paths:
   - vendors
   - spec
   - src
-  - *.json
+  - "**.json"
