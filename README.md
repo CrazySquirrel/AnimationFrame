@@ -5,8 +5,7 @@
 [![Code Climate](https://codeclimate.com/github/CrazySquirrel/AnimationFrame/badges/gpa.svg)](https://codeclimate.com/github/CrazySquirrel/AnimationFrame)
 [![Test Coverage](https://codeclimate.com/github/CrazySquirrel/AnimationFrame/badges/coverage.svg)](https://codeclimate.com/github/CrazySquirrel/AnimationFrame/coverage)
 [![Issue Count](https://codeclimate.com/github/CrazySquirrel/AnimationFrame/badges/issue_count.svg)](https://codeclimate.com/github/CrazySquirrel/AnimationFrame)
-[![license](https://img.shields.io/github/license/CrazySquirrel/AnimationFrame.svg)](https://github.com/CrazySquirrel/AnimationFrame)
-[![npm version](https://img.shields.io/badge/donate-%E2%99%A5-red.svg)](http://crazysquirrel.ru/support/)
+[![Donate](https://img.shields.io/badge/donate-%E2%99%A5-red.svg)](http://crazysquirrel.ru/support/)
 
 This is the class for signing several watcher on requestanimationframe.
 
