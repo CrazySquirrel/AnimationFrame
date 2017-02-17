@@ -39,7 +39,7 @@ objBuildList = Object.assign(
         "./lib/AnimationFrame": ["./lib/AnimationFrame.ts"],
         "./dist/simple-typescript-example/index": ["./src/simple-typescript-example/index.ts"],
         "./dist/simple-javascript-example/index": ["./src/simple-javascript-example/index.ts"],
-        "./dist/test-scope/index": ["./src/test-scope/index.ts"],
+        "./dist/test-scope/index": ["./src/test-scope/index.ts"]
     }
 );
 
@@ -54,7 +54,7 @@ let arrPlugins = [
 /**
  * Add BrowserSync for development mode
  */
-if (NODE_ENV == "development" || NODE_ENV == "production") {
+if (NODE_ENV === "development" || NODE_ENV === "production") {
     arrPlugins.push(
         new BrowserSyncPlugin({
             host: "localhost",
@@ -72,7 +72,7 @@ if (NODE_ENV == "development" || NODE_ENV == "production") {
 /**
  * Add uglifyer for production mode
  */
-if (NODE_ENV == "production" || NODE_ENV == "testing") {
+if (NODE_ENV === "production" || NODE_ENV === "testing") {
     arrPlugins.push(
         new webpack.optimize.UglifyJsPlugin({
             minimize: true,
@@ -107,7 +107,7 @@ arrPlugins.push(
 module.exports = {
     entry: objBuildList,
     output: {
-        filename: NODE_ENV == "production" ? "[name].js" : "[name].js",
+        filename: NODE_ENV === "production" ? "[name].js" : "[name].js",
         library: "AnimationFrame",
         libraryTarget: "umd",
         umdNamedDefine: true
