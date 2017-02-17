@@ -1,6 +1,24 @@
-ratings:
-  paths:
-    - lib
+engines:
+  csslint:
+    enabled: true
+  duplication:
+      enabled: true
+      config:
+        languages:
+        - javascript:
+  eslint:
+      enabled: true
+  fixme:
+      enabled: true
+  nodesecurity:
+      enabled: true
+  markdownlint:
+      enabled: true
+  scss-lint:
+      enabled: true
+  shellcheck:
+      enabled: true
 exclude_paths:
   - typings
   - vendors
+  - spec
