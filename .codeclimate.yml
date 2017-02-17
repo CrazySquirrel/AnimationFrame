@@ -12,9 +12,13 @@ engines:
       enabled: true
   markdownlint:
       enabled: true
+ratings:
+  paths:
+  - lib/**
 exclude_paths:
   - typings
   - vendors
   - spec
   - src
+  - "**.js"
   - "**.json"
