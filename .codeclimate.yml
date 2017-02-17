@@ -16,3 +16,5 @@ exclude_paths:
   - typings
   - vendors
   - spec
+  - src
+  - *.json
