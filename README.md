@@ -2,7 +2,6 @@
 # AnimationFrame
 
 [![npm version](https://badge.fury.io/js/AnimationFrame.svg)](https://github.com/CrazySquirrel/AnimationFrame)
-[![Travis branch](https://img.shields.io/travis/CrazySquirrel/AnimationFrame/master.svg)](https://github.com/CrazySquirrel/AnimationFrame)
 [![Code Climate](https://codeclimate.com/github/CrazySquirrel/AnimationFrame/badges/gpa.svg)](https://codeclimate.com/github/CrazySquirrel/AnimationFrame)
 [![Test Coverage](https://codeclimate.com/github/CrazySquirrel/AnimationFrame/badges/coverage.svg)](https://codeclimate.com/github/CrazySquirrel/AnimationFrame/coverage)
 [![Issue Count](https://codeclimate.com/github/CrazySquirrel/AnimationFrame/badges/issue_count.svg)](https://codeclimate.com/github/CrazySquirrel/AnimationFrame)
