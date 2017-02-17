@@ -2,8 +2,8 @@ language: node_js
 node_js: '6'
 install: npm install
 script:
-  - npm run production
   - npm run karma
+  - npm run production
 after_success:
   - npm install -g codeclimate-test-reporter
   - codeclimate-test-reporter < doc/coverage/report-lcov/lcov.info
