@@ -31,14 +31,14 @@ describe("AnimationFrame", () => {
                             [x1, x2, x3].indexOf(x4) === -1
                         ) {
                             let cond = (
-                                (typeof x1 === "object" || x1 === undefined) &&
-                                (typeof x2 === "function" || x2 === undefined) &&
-                                ((typeof x3 === "object" && Array.isArray(x3)) || x3 === undefined) &&
-                                (typeof x4 === "string" || x4 === undefined)
+                                (typeof x1 === "object" || !x1 || x1 === undefined) &&
+                                (typeof x2 === "function" || !x2 || x2 === undefined) &&
+                                ((typeof x3 === "object" && Array.isArray(x3)) || !x3 || x3 === undefined) &&
+                                (typeof x4 === "string" || !x4 || x4 === undefined)
                             );
                             dataSet.push({
                                 params: [x1, x2, x3, x4],
-                                result: cond
+                                result: cond,
                             });
                         }
                     }

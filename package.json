@@ -22,7 +22,7 @@
     "production:watch": "NODE_ENV=production webpack --config=webpack.build.config.js --watch",
     "testing": "NODE_ENV=testing webpack --bail --config=webpack.build.config.js",
     "testing:watch": "NODE_ENV=testing webpack --config=webpack.build.config.js --watch",
-    "karma": "rm -rf ./doc/report/ && rm -rf ./doc/coverage/ && NODE_ENV=testing karma start karma.conf.js",
+    "test": "rm -rf ./doc/report/ && rm -rf ./doc/coverage/ && NODE_ENV=testing karma start karma.conf.js",
     "stats": "NODE_ENV=development webpack --bail --config=webpack.build.config.js --profile --json > ./doc/stats.json",
     "docs": "rm -rf ./doc/js/ && typedoc --mode file --target ES6 --module 'commonjs' --out ./doc/js/ ./src/ts/"
   },
