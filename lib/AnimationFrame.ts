@@ -149,6 +149,8 @@ class AnimationFrame implements IAnimationFrame {
 
   private serialID: number;
 
+  public errorHandler: any;
+
   /**
    * Create request animation frame
    */
@@ -165,6 +167,10 @@ class AnimationFrame implements IAnimationFrame {
      * Backward compatibility
      */
     this.stack = this.parallelStack;
+    /**
+     * No error handler
+     */
+    this.errorHandler = null;
     /**
      * Start requestAnimationFrame watcher
      */
@@ -334,16 +340,16 @@ class AnimationFrame implements IAnimationFrame {
     try {
       this.parallelWatch();
     } catch (e) {
-      /**
-       * TODO: add logger
-       */
+      if (this.errorHandler) {
+        this.errorHandler(e);
+      }
     }
     try {
       this.serialWatch();
     } catch (e) {
-      /**
-       * TODO: add logger
-       */
+      if (this.errorHandler) {
+        this.errorHandler(e);
+      }
     }
     /**
      * Recall watcher
@@ -407,17 +413,17 @@ class AnimationFrame implements IAnimationFrame {
               }
 
             } catch (e) {
-              /**
-               * TODO: add logger
-               */
+              if (this.errorHandler) {
+                this.errorHandler(e);
+              }
             }
           }
         }
       }
     } catch (e) {
-      /**
-       * TODO: add logger
-       */
+      if (this.errorHandler) {
+        this.errorHandler(e);
+      }
     }
   }
 
@@ -484,9 +490,9 @@ class AnimationFrame implements IAnimationFrame {
         }
       }
     } catch (e) {
-      /**
-       * TODO: add logger
-       */
+      if (this.errorHandler) {
+        this.errorHandler(e);
+      }
     }
   }
 }
