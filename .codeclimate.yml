@@ -18,8 +18,15 @@ ratings:
 exclude_paths:
   - typings
   - vendors
+  - node_modules
+  - bin
+  - doc
+  - tmp
+  - .git
+  - .idea
   - spec
   - src
   - dist
+  - polyfills
   - "**.js"
   - "**.json"
