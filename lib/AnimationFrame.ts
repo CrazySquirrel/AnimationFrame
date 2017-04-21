@@ -35,7 +35,7 @@ class AnimationFrame implements IAnimationFrame {
 
   public errorHandler: any;
 
-  private serialID: number;
+  public serialID: number;
 
   /**
    * Create request animation frame
@@ -197,7 +197,7 @@ class AnimationFrame implements IAnimationFrame {
    * @param _params
    * @return {boolean}
    */
-  private prepareParams(_params): boolean|string {
+  public prepareParams(_params): boolean|string {
     if (
         typeof _params === "object"
     ) {
@@ -232,7 +232,7 @@ class AnimationFrame implements IAnimationFrame {
   /**
    * Watch and call methods
    */
-  private watch(): void {
+  public watch(): void {
     try {
       this.parallelWatch();
     } catch (e) {
@@ -256,7 +256,7 @@ class AnimationFrame implements IAnimationFrame {
   /**
    * Watch and call methods
    */
-  private parallelWatch(): void {
+  public parallelWatch(): void {
     try {
       /**
        * If stack exist, it is an object and it is contains methods
@@ -326,7 +326,7 @@ class AnimationFrame implements IAnimationFrame {
   /**
    * Watch and call methods
    */
-  private serialWatch(): void {
+  public serialWatch(): void {
     try {
       /**
        * If stack exist, it is an object and it is contains methods
@@ -461,17 +461,15 @@ if (
         /**
          * Freeze old stacks
          */
-        /*
-         if (root._oldAnimationFrame.parallelStack) {
-         Object.preventExtensions(root._oldAnimationFrame.parallelStack);
-         }
-         if (root._oldAnimationFrame.stack) {
-         Object.preventExtensions(root._oldAnimationFrame.stack);
-         }
-         if (root._oldAnimationFrame.serialStack) {
-         Object.preventExtensions(root._oldAnimationFrame.serialStack);
-         }
-         */
+        if (root._oldAnimationFrame.parallelStack) {
+          Object.preventExtensions(root._oldAnimationFrame.parallelStack);
+        }
+        if (root._oldAnimationFrame.stack) {
+          Object.preventExtensions(root._oldAnimationFrame.stack);
+        }
+        if (root._oldAnimationFrame.serialStack) {
+          Object.preventExtensions(root._oldAnimationFrame.serialStack);
+        }
         /**
          * In root._AnimationFrame was previous version and it should migrate
          */
@@ -492,7 +490,7 @@ if (
                 ID,
               });
               root._oldAnimationFrame.parallelUnsubscribe(ID);
-              //delete root._oldAnimationFrame.parallelStack[ID];
+              delete root._oldAnimationFrame.parallelStack[ID];
             }
           }
         } else if (typeof root._oldAnimationFrame.stack === "object") {
@@ -508,7 +506,7 @@ if (
                   root._oldAnimationFrame.stack[ID].ID
               );
               root._oldAnimationFrame.unsubscribe(ID);
-              //delete root._oldAnimationFrame.stack[ID];
+              delete root._oldAnimationFrame.stack[ID];
             }
           }
         }
@@ -525,7 +523,7 @@ if (
                 ID,
               });
               root._oldAnimationFrame.serialUnsubscribe(ID);
-              //delete root._oldAnimationFrame.serialStack[ID];
+              delete root._oldAnimationFrame.serialStack[ID];
             }
           }
         }
