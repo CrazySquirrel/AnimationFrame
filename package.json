@@ -64,13 +64,13 @@
     "karma-safari-launcher": "^1.0.0",
     "karma-source-map-support": "^1.2.0",
     "karma-webpack": "^1.8.0",
+    "promise-polyfill": "^6.0.2",
     "string-replace-webpack-plugin": "https://github.com/CrazySquirrel/string-replace-webpack-plugin.git",
     "ts-loader": "^0.8.2",
     "tslint": "^3.15.1",
     "typedoc": "^0.5.1",
     "typescript": "^2.0.9",
     "webpack": "^1.13.3",
-    "webpack-notifier": "^1.4.1",
-    "promise-polyfill": "^6.0.2"
+    "webpack-notifier": "^1.4.1"
   }
 }

@@ -9,6 +9,12 @@ declare let global: any;
 declare let require: any;
 declare let jasmine: any;
 
+let _package = require("../package.json");
+
+let version = _package.version.split(".").map((v) => {
+  return parseInt(v, 10);
+});
+
 import root from "../polyfills/index";
 
 let AnimationFrame;
@@ -16,12 +22,69 @@ let AnimationFrame;
 describe("AnimationFrame", () => {
   jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
+  let resetAnimationFrame = () => {
+    let stacksBefore: any = [{}, {}, {}];
+    let stacksAfter: any = [{}, {}, {}];
+    let stacksOld: any = [0, 0, 0];
+
+    if (root.AnimationFrame) {
+      stacksBefore = [
+        root.AnimationFrame.stack,
+        root.AnimationFrame.serialStack,
+        root.AnimationFrame.parallelStack,
+      ];
+    }
+
+    AnimationFrame = new (require("../lib/AnimationFrame")).constructor();
+
+    version[Math.floor(Math.random() * 3)] = Math.ceil(Math.random() * 100);
+
+    AnimationFrame.version = null;
+
+    root.AnimationFrame = AnimationFrame;
+
+    AnimationFrame.version = version.join(".");
+
+    root.AnimationFrame = AnimationFrame;
+
+    if (root.AnimationFrame) {
+      stacksAfter = [
+        root.AnimationFrame.stack,
+        root.AnimationFrame.serialStack,
+        root.AnimationFrame.parallelStack,
+      ];
+    }
+
+    if (root._oldAnimationFrame) {
+      stacksOld = [
+        Object.keys(root._oldAnimationFrame.stack).length,
+        Object.keys(root._oldAnimationFrame.serialStack).length,
+        Object.keys(root._oldAnimationFrame.parallelStack).length,
+      ];
+    }
+
+    expect(stacksOld[0] === 0).toBeTrue();
+    expect(stacksOld[1] === 0).toBeTrue();
+    expect(stacksOld[2] === 0).toBeTrue();
+
+    for (let i = 0; i < 3; i++) {
+      for (let ID in stacksBefore[i]) {
+        if (stacksBefore[i].hasOwnProperty(ID)) {
+          expect(!!stacksAfter[i][ID]).toBeTrue();
+          for (let prop in stacksAfter[i][ID]) {
+            if (stacksBefore[i][ID].hasOwnProperty(prop)) {
+              expect(stacksBefore[i][ID][prop] === stacksAfter[i][ID][prop]).toBeTrue();
+            }
+          }
+        }
+      }
+    }
+  };
+
   let paramsValues;
   let dataSet;
 
   beforeEach(() => {
-    AnimationFrame = require("../lib/AnimationFrame");
-
     paramsValues = [undefined, null, false, true, 0, 123, "test", {}, [], () => {
     }, window];
     dataSet = [];
@@ -30,7 +93,8 @@ describe("AnimationFrame", () => {
   let test = (subscribeMethod,
               unsubscribeMethod,
               watchMethod,
-              subscribeStack) => {
+              subscribeStack,
+              clean) => {
     return new Promise((resolve, reject) => {
 
       for (let x1 of paramsValues) {
@@ -43,6 +107,9 @@ describe("AnimationFrame", () => {
                   [x1, x2, x4].indexOf(x3) === -1 &&
                   [x1, x2, x3].indexOf(x4) === -1
               ) {
+                if (typeof x4 === "string") {
+                  x4 = AnimationFrame.getID();
+                }
                 let cond = (
                     (typeof x1 === "object" || !x1) &&
                     (typeof x2 === "function" || !x2) &&
@@ -62,7 +129,7 @@ describe("AnimationFrame", () => {
       let promises = [];
 
       for (let set of dataSet) {
-        promises.push(new Promise((_resolve, _reject) => {
+        promises.push(new Promise((_resolve) => {
           let result;
 
           if (subscribeMethod === AnimationFrame.subscribe) {
@@ -82,14 +149,18 @@ describe("AnimationFrame", () => {
 
             watchMethod.apply(AnimationFrame, []);
 
-            setTimeout(
-                () => {
-                  unsubscribeMethod.apply(AnimationFrame, [result]);
-                  expect(Object.keys(subscribeStack)).not.toContain(result);
-                  _resolve();
-                },
-                1000
-            );
+            if (clean) {
+              setTimeout(
+                  () => {
+                    expect(unsubscribeMethod.apply(AnimationFrame, [result])).toBeTrue();
+                    expect(Object.keys(subscribeStack)).not.toContain(result);
+                    _resolve();
+                  },
+                  1000
+              );
+            } else {
+              _resolve();
+            }
           } else {
             expect(typeof(result)).toEqual("boolean");
             expect(result).toEqual(false);
@@ -103,60 +174,73 @@ describe("AnimationFrame", () => {
   };
 
   it("AnimationFrame", () => {
+    resetAnimationFrame();
     expect(typeof(AnimationFrame)).toEqual("object");
   });
 
   it("AnimationFrame.subscribe", (done) => {
+    resetAnimationFrame();
     test(
         AnimationFrame.subscribe,
         AnimationFrame.unsubscribe,
         AnimationFrame.watch,
-        AnimationFrame.stack
+        AnimationFrame.stack,
+        false
     ).then(done).catch(done);
   });
 
   it("AnimationFrame.unsubscribe", (done) => {
+    resetAnimationFrame();
     test(
         AnimationFrame.subscribe,
         AnimationFrame.unsubscribe,
         AnimationFrame.watch,
-        AnimationFrame.stack
+        AnimationFrame.stack,
+        true
     ).then(done).catch(done);
   });
 
   it("AnimationFrame.serialSubscribe", (done) => {
+    resetAnimationFrame();
     test(
         AnimationFrame.serialSubscribe,
         AnimationFrame.serialUnsubscribe,
         AnimationFrame.serialWatch,
-        AnimationFrame.serialStack
+        AnimationFrame.serialStack,
+        false
     ).then(done).catch(done);
   });
 
   it("AnimationFrame.serialUnsubscribe", (done) => {
+    resetAnimationFrame();
     test(
         AnimationFrame.serialSubscribe,
         AnimationFrame.serialUnsubscribe,
         AnimationFrame.serialWatch,
-        AnimationFrame.serialStack
+        AnimationFrame.serialStack,
+        true
     ).then(done).catch(done);
   });
 
   it("AnimationFrame.parallelSubscribe", (done) => {
+    resetAnimationFrame();
     test(
         AnimationFrame.parallelSubscribe,
         AnimationFrame.parallelUnsubscribe,
         AnimationFrame.parallelWatch,
-        AnimationFrame.parallelStack
+        AnimationFrame.parallelStack,
+        false
     ).then(done).catch(done);
   });
 
   it("AnimationFrame.parallelUnsubscribe", (done) => {
+    resetAnimationFrame();
     test(
         AnimationFrame.parallelSubscribe,
         AnimationFrame.parallelUnsubscribe,
         AnimationFrame.parallelWatch,
-        AnimationFrame.parallelStack
+        AnimationFrame.parallelStack,
+        true
     ).then(done).catch(done);
   });
 });
