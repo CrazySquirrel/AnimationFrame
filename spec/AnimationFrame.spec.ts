@@ -17,7 +17,7 @@ let version = _package.version.split(".").map((v) => {
 
 import root from "../polyfills/index";
 
-let AnimationFrame;
+let AnimationFrame = new (require("../lib/AnimationFrame")).constructor();
 
 describe("AnimationFrame", () => {
   jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
@@ -27,13 +27,11 @@ describe("AnimationFrame", () => {
     let stacksAfter: any = [{}, {}, {}];
     let stacksOld: any = [0, 0, 0];
 
-    if (root.AnimationFrame) {
-      stacksBefore = [
-        root.AnimationFrame.stack,
-        root.AnimationFrame.serialStack,
-        root.AnimationFrame.parallelStack,
-      ];
-    }
+    stacksBefore = [
+      root.AnimationFrame.stack,
+      root.AnimationFrame.serialStack,
+      root.AnimationFrame.parallelStack,
+    ];
 
     AnimationFrame = new (require("../lib/AnimationFrame")).constructor();
 
@@ -47,21 +45,17 @@ describe("AnimationFrame", () => {
 
     root.AnimationFrame = AnimationFrame;
 
-    if (root.AnimationFrame) {
-      stacksAfter = [
-        root.AnimationFrame.stack,
-        root.AnimationFrame.serialStack,
-        root.AnimationFrame.parallelStack,
-      ];
-    }
+    stacksAfter = [
+      root.AnimationFrame.stack,
+      root.AnimationFrame.serialStack,
+      root.AnimationFrame.parallelStack,
+    ];
 
-    if (root._oldAnimationFrame) {
-      stacksOld = [
-        Object.keys(root._oldAnimationFrame.stack).length,
-        Object.keys(root._oldAnimationFrame.serialStack).length,
-        Object.keys(root._oldAnimationFrame.parallelStack).length,
-      ];
-    }
+    stacksOld = [
+      Object.keys(root._oldAnimationFrame.stack).length,
+      Object.keys(root._oldAnimationFrame.serialStack).length,
+      Object.keys(root._oldAnimationFrame.parallelStack).length,
+    ];
 
     expect(stacksOld[0] === 0).toBeTrue();
     expect(stacksOld[1] === 0).toBeTrue();
@@ -69,13 +63,9 @@ describe("AnimationFrame", () => {
 
     for (let i = 0; i < 3; i++) {
       for (let ID in stacksBefore[i]) {
-        if (stacksBefore[i].hasOwnProperty(ID)) {
-          expect(!!stacksAfter[i][ID]).toBeTrue();
-          for (let prop in stacksAfter[i][ID]) {
-            if (stacksBefore[i][ID].hasOwnProperty(prop)) {
-              expect(stacksBefore[i][ID][prop] === stacksAfter[i][ID][prop]).toBeTrue();
-            }
-          }
+        expect(!!stacksAfter[i][ID]).toBeTrue();
+        for (let prop in stacksAfter[i][ID]) {
+          expect(stacksBefore[i][ID][prop] === stacksAfter[i][ID][prop]).toBeTrue();
         }
       }
     }

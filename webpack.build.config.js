@@ -133,20 +133,20 @@ module.exports = {
             replacements: [
               {
                 pattern: /#HASH#/gi,
-                replacement: function (string, pattern1) {
+                replacement: () => {
                   return crypto.createHash("md5").update(
                       (new Date()).getTime().toString()).digest("hex");
                 }
               },
               {
                 pattern: /#PACKAGE_NAME#/gi,
-                replacement: function (string, pattern1) {
+                replacement: () => {
                   return packagenpm.name;
                 }
               },
               {
                 pattern: /#PACKAGE_VERSION#/gi,
-                replacement: function (string, pattern1) {
+                replacement: () => {
                   return packagenpm.version;
                 }
               }

@@ -27,6 +27,7 @@ exclude_paths:
   - spec
   - src
   - dist
+  - interfaces
   - polyfills
   - "**.js"
   - "**.json"
