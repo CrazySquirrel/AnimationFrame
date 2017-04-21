@@ -536,6 +536,7 @@ if (
 /**
  * Export single AnimationFrame instance
  */
+root.AnimationFrame = new AnimationFrame();
 let _AnimationFrame = root.AnimationFrame;
 export default _AnimationFrame;
 module.exports = _AnimationFrame;
