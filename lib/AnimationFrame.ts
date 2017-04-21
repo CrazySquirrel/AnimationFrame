@@ -426,9 +426,7 @@ if (
     configurable: true,
     enumerable: false,
     get: () => {
-      if (!root._AnimationFrame) {
-        root._AnimationFrame = new AnimationFrame();
-      }
+      root._AnimationFrame = root._AnimationFrame || new AnimationFrame();
       return root._AnimationFrame;
     },
     set: (v) => {
@@ -445,6 +443,35 @@ if (
          * Saved old animation frame
          */
         root._oldAnimationFrame = root._AnimationFrame;
+        /**
+         * Stop old watchers
+         */
+        root._oldAnimationFrame.parallelWatch = () => {
+        };
+        root._oldAnimationFrame.serialWatch = () => {
+        };
+        root._oldAnimationFrame.watch = () => {
+        };
+        /**
+         * Overridable subscription methods
+         */
+        root._oldAnimationFrame.subscribe = v.subscribe;
+        root._oldAnimationFrame.parallelSubscribe = v.parallelSubscribe;
+        root._oldAnimationFrame.serialSubscribe = v.serialSubscribe;
+        /**
+         * Freeze old stacks
+         */
+        /*
+         if (root._oldAnimationFrame.parallelStack) {
+         Object.preventExtensions(root._oldAnimationFrame.parallelStack);
+         }
+         if (root._oldAnimationFrame.stack) {
+         Object.preventExtensions(root._oldAnimationFrame.stack);
+         }
+         if (root._oldAnimationFrame.serialStack) {
+         Object.preventExtensions(root._oldAnimationFrame.serialStack);
+         }
+         */
         /**
          * In root._AnimationFrame was previous version and it should migrate
          */
@@ -465,6 +492,7 @@ if (
                 ID,
               });
               root._oldAnimationFrame.parallelUnsubscribe(ID);
+              //delete root._oldAnimationFrame.parallelStack[ID];
             }
           }
         } else if (typeof root._oldAnimationFrame.stack === "object") {
@@ -480,6 +508,7 @@ if (
                   root._oldAnimationFrame.stack[ID].ID
               );
               root._oldAnimationFrame.unsubscribe(ID);
+              //delete root._oldAnimationFrame.stack[ID];
             }
           }
         }
@@ -496,6 +525,7 @@ if (
                 ID,
               });
               root._oldAnimationFrame.serialUnsubscribe(ID);
+              //delete root._oldAnimationFrame.serialStack[ID];
             }
           }
         }
@@ -503,7 +533,6 @@ if (
     },
   });
 }
-root.AnimationFrame = new AnimationFrame();
 /**
  * Export single AnimationFrame instance
  */
