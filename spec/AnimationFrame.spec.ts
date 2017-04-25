@@ -19,6 +19,26 @@ import root from "../polyfills/index";
 
 let AnimationFrame = new (require("../lib/AnimationFrame")).constructor();
 
+setInterval(
+    () => {
+      AnimationFrame.subscribe(root, () => {
+      }, []);
+      AnimationFrame.parallelSubscribe({
+        context: root,
+        callback: () => {
+        },
+        params: []
+      });
+      AnimationFrame.serialSubscribe({
+        context: root,
+        callback: () => {
+        },
+        params: []
+      });
+    },
+    1
+);
+
 describe("AnimationFrame", () => {
   jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
@@ -76,7 +96,7 @@ describe("AnimationFrame", () => {
 
   beforeEach(() => {
     paramsValues = [undefined, null, false, true, 0, 123, "test", {}, [], () => {
-    }, window];
+    }, root];
     dataSet = [];
   });
 
@@ -123,8 +143,26 @@ describe("AnimationFrame", () => {
           let result;
 
           if (subscribeMethod === AnimationFrame.subscribe) {
+            result = subscribeMethod.apply(AnimationFrame, []);
+            unsubscribeMethod.apply(AnimationFrame, [result]);
+
+            result = subscribeMethod.apply(AnimationFrame, [set.params[0]]);
+            unsubscribeMethod.apply(AnimationFrame, [result]);
+
+            result = subscribeMethod.apply(AnimationFrame, [set.params[0], set.params[1]]);
+            unsubscribeMethod.apply(AnimationFrame, [result]);
+
+            result = subscribeMethod.apply(AnimationFrame, [set.params[0], set.params[1], set.params[2]]);
+            unsubscribeMethod.apply(AnimationFrame, [result]);
+
+            result = subscribeMethod.apply(AnimationFrame, [set.params[0], set.params[1], set.params[2], set.params[3]]);
+            unsubscribeMethod.apply(AnimationFrame, [result]);
+
             result = subscribeMethod.apply(AnimationFrame, set.params);
           } else {
+            result = subscribeMethod.apply(AnimationFrame, []);
+            unsubscribeMethod.apply(AnimationFrame, [result]);
+
             result = subscribeMethod.apply(AnimationFrame, [{
               context: set.params[0],
               callback: set.params[1],
