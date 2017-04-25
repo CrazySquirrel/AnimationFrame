@@ -26,7 +26,7 @@
     "stats": "NODE_ENV=development webpack --bail --config=webpack.build.config.js --profile --json > ./doc/stats.json",
     "docs": "rm -rf ./doc/js/ && typedoc --mode file --target ES6 --module 'commonjs' --out ./doc/js/ ./src/ts/",
     "lint": "codeclimate analyze",
-    "release": "standard-version -m '%s' && git push origin master --tags",
+    "release": "standard-version && git push origin master --tags",
     "commit": "git-cz -a"
   },
   "pre-commit": [
