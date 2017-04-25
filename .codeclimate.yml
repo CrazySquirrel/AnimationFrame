@@ -29,5 +29,7 @@ exclude_paths:
   - dist
   - interfaces
   - polyfills
+  - CHANGELOG.md
+  - LICENSE.md
   - "**.js"
   - "**.json"

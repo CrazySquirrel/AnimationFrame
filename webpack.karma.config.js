@@ -136,8 +136,8 @@ module.exports = {
   externals: {
     "AnimationFrame": "AnimationFrame"
   },
-  devtool: (NODE_ENV == "development" ? "inline-source-map" : (NODE_ENV
-  == "testing" ? "inline-source-map" : "")),
+  devtool: (NODE_ENV === "development" ? "inline-source-map" : (NODE_ENV
+  === "testing" ? "inline-source-map" : "")),
   plugins: arrPlugins,
   resolve: {
     extensions: ["", ".webpack.js", ".web.js", ".ts", ".tsx", ".js"]
