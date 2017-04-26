@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.0.41"></a>
+## [1.0.41](https://github.com/CrazySquirrel/AnimationFrame/compare/v1.0.40...v1.0.41) (2017-04-26)
+
+
+### Bug Fixes
+
+* **Migration:** Stacks freezing ([c2bf4fa](https://github.com/CrazySquirrel/AnimationFrame/commit/c2bf4fa))
+
+
+
 <a name="1.0.40"></a>
 ## [1.0.40](https://github.com/CrazySquirrel/AnimationFrame/compare/v1.0.39...v1.0.40) (2017-04-25)
 
