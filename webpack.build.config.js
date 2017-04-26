@@ -166,27 +166,7 @@ module.exports = {
         test: /\.json$/,
         loaders: [
           StringReplacePlugin.replace({
-            replacements: [
-              {
-                pattern: /#HASH#/gi,
-                replacement: () => {
-                  return crypto.createHash("md5").update(
-                      packagenpm.version).digest("hex");
-                }
-              },
-              {
-                pattern: /#PACKAGE_NAME#/gi,
-                replacement: () => {
-                  return packagenpm.name;
-                }
-              },
-              {
-                pattern: /#PACKAGE_VERSION#/gi,
-                replacement: () => {
-                  return packagenpm.version;
-                }
-              }
-            ]
+            replacements: replacements
           }),
           "json-loader"
         ]

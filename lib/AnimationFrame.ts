@@ -77,61 +77,96 @@ class AnimationFrame implements IAnimationFrame {
                    },
                    params: Array<any> = [],
                    ID?: string): boolean|string {
-    return this.parallelSubscribe({
-      context,
-      callback,
-      params,
-      ID,
-    });
+    try {
+      return this.parallelSubscribe({
+        context,
+        callback,
+        params,
+        ID,
+      });
+    } catch (e) {
+      this._errorHandler(e);
+      try {
+        return root._AnimationFrame.parallelSubscribe({
+          context,
+          callback,
+          params,
+          ID,
+        });
+      } catch (e) {
+        this._errorHandler(e);
+        return false;
+      }
+    }
   }
 
   /**
    * Parallel callback subscribe
-   * @param _params
+   * @param params
    * @return {boolean|string}
    */
-  public parallelSubscribe(_params): boolean|string {
-    _params = this.prepareParams(_params);
-    if (_params) {
-      /**
-       * Add method to the stack
-       */
-      this.parallelStack[_params.ID] = {
-        callback: _params.callback,
-        context: _params.context,
-        params: _params.params,
-      };
-      /**
-       * Return subscription ID
-       */
-      return _params.ID;
-    } else {
-      return false;
+  public parallelSubscribe(params): boolean|string {
+    try {
+      let _params: any = this.prepareParams(params);
+      if (_params) {
+        /**
+         * Add method to the stack
+         */
+        this.parallelStack[_params.ID] = {
+          callback: _params.callback,
+          context: _params.context,
+          params: _params.params,
+        };
+        /**
+         * Return subscription ID
+         */
+        return _params.ID;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      this._errorHandler(e);
+      try {
+        return root._AnimationFrame.parallelSubscribe(params);
+      } catch (e) {
+        this._errorHandler(e);
+        return false;
+      }
     }
   }
 
   /**
    * Serial callback subscribe
-   * @param _params
+   * @param params
    * @return {boolean|string}
    */
-  public serialSubscribe(_params): boolean|string {
-    _params = this.prepareParams(_params);
-    if (_params) {
-      /**
-       * Add method to the stack
-       */
-      this.serialStack[_params.ID] = {
-        callback: _params.callback,
-        context: _params.context,
-        params: _params.params,
-      };
-      /**
-       * Return subscription ID
-       */
-      return _params.ID;
-    } else {
-      return false;
+  public serialSubscribe(params): boolean|string {
+    try {
+      let _params: any = this.prepareParams(params);
+      if (_params) {
+        /**
+         * Add method to the stack
+         */
+        this.serialStack[_params.ID] = {
+          callback: _params.callback,
+          context: _params.context,
+          params: _params.params,
+        };
+        /**
+         * Return subscription ID
+         */
+        return _params.ID;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      this._errorHandler(e);
+      try {
+        return root._AnimationFrame.serialSubscribe(params);
+      } catch (e) {
+        this._errorHandler(e);
+        return false;
+      }
     }
   }
 
@@ -140,7 +175,17 @@ class AnimationFrame implements IAnimationFrame {
    * @param ID
    */
   public unsubscribe(ID: string): boolean {
-    return this.parallelUnsubscribe(ID);
+    try {
+      return this.parallelUnsubscribe(ID);
+    } catch (e) {
+      this._errorHandler(e);
+      try {
+        return root._AnimationFrame.parallelUnsubscribe(ID);
+      } catch (e) {
+        this._errorHandler(e);
+        return false;
+      }
+    }
   }
 
   /**
@@ -148,20 +193,30 @@ class AnimationFrame implements IAnimationFrame {
    * @param ID
    */
   public parallelUnsubscribe(ID: string): boolean {
-    if (typeof ID === "string") {
-      /**
-       * If required method exist in the stack
-       */
-      if (this.parallelStack[ID]) {
+    try {
+      if (typeof ID === "string") {
         /**
-         * Nullify method in the stack and destroy it
+         * If required method exist in the stack
          */
-        this.parallelStack[ID] = false;
-        delete this.parallelStack[ID];
-        return true;
+        if (this.parallelStack[ID]) {
+          /**
+           * Nullify method in the stack and destroy it
+           */
+          this.parallelStack[ID] = false;
+          delete this.parallelStack[ID];
+          return true;
+        }
+      }
+      return false;
+    } catch (e) {
+      this._errorHandler(e);
+      try {
+        return root._AnimationFrame.parallelUnsubscribe(ID);
+      } catch (e) {
+        this._errorHandler(e);
+        return false;
       }
     }
-    return false;
   }
 
   /**
@@ -169,20 +224,30 @@ class AnimationFrame implements IAnimationFrame {
    * @param ID
    */
   public serialUnsubscribe(ID: string): boolean {
-    if (typeof ID === "string") {
-      /**
-       * If required method exist in the stack
-       */
-      if (this.serialStack[ID]) {
+    try {
+      if (typeof ID === "string") {
         /**
-         * Nullify method in the stack and destroy it
+         * If required method exist in the stack
          */
-        this.serialStack[ID] = false;
-        delete this.serialStack[ID];
-        return true;
+        if (this.serialStack[ID]) {
+          /**
+           * Nullify method in the stack and destroy it
+           */
+          this.serialStack[ID] = false;
+          delete this.serialStack[ID];
+          return true;
+        }
+      }
+      return false;
+    } catch (e) {
+      this._errorHandler(e);
+      try {
+        return root._AnimationFrame.serialUnsubscribe(ID);
+      } catch (e) {
+        this._errorHandler(e);
+        return false;
       }
     }
-    return false;
   }
 
   /**
@@ -234,23 +299,23 @@ class AnimationFrame implements IAnimationFrame {
    */
   public watch(): void {
     try {
-      this.parallelWatch();
-    } catch (e) {
-      if (this.errorHandler) {
-        this.errorHandler(e);
+      try {
+        this.parallelWatch();
+      } catch (e) {
+        this._errorHandler(e);
       }
-    }
-    try {
-      this.serialWatch();
-    } catch (e) {
-      if (this.errorHandler) {
-        this.errorHandler(e);
+      try {
+        this.serialWatch();
+      } catch (e) {
+        this._errorHandler(e);
       }
+      /**
+       * Recall watcher
+       */
+      root.requestAnimationFrame(this.watch.bind(this));
+    } catch (e) {
+      this._errorHandler(e);
     }
-    /**
-     * Recall watcher
-     */
-    root.requestAnimationFrame(this.watch.bind(this));
   }
 
   /**
@@ -309,17 +374,13 @@ class AnimationFrame implements IAnimationFrame {
               }
 
             } catch (e) {
-              if (this.errorHandler) {
-                this.errorHandler(e);
-              }
+              this._errorHandler(e);
             }
           }
         }
       }
     } catch (e) {
-      if (this.errorHandler) {
-        this.errorHandler(e);
-      }
+      this._errorHandler(e);
     }
   }
 
@@ -386,9 +447,16 @@ class AnimationFrame implements IAnimationFrame {
         }
       }
     } catch (e) {
-      if (this.errorHandler) {
-        this.errorHandler(e);
-      }
+      this._errorHandler(e);
+    }
+  }
+
+  /**
+   * Error Handler
+   */
+  public _errorHandler(e) {
+    if (this.errorHandler) {
+      this.errorHandler(e);
     }
   }
 }
