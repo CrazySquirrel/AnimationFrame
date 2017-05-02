@@ -1,15 +1,25 @@
 "use strict";
-
+/**
+ * Import interfaces
+ */
+import IWindow from "../interfaces/IWindow";
+/**
+ * Declare window interface
+ */
+declare let window: IWindow;
 declare let global: any;
 declare let require: any;
 
-let root: any;
+class Root implements IWindow {
+}
+
+let root: IWindow;
 
 if (typeof window === "undefined") {
   if (typeof global !== "undefined") {
     root = global;
   } else {
-    root = {};
+    root = new Root();
   }
 } else {
   root = window;

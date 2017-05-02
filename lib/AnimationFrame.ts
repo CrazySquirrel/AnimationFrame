@@ -71,7 +71,7 @@ class AnimationFrame implements IAnimationFrame {
    * @param ID
    * @return {boolean|string}
    */
-  public subscribe(context: Object = root,
+  public subscribe(context: any = root,
                    callback: Function = () => {
                      return null;
                    },
@@ -105,7 +105,7 @@ class AnimationFrame implements IAnimationFrame {
    * @param params
    * @return {boolean|string}
    */
-  public parallelSubscribe(params): boolean|string {
+  public parallelSubscribe(params: any): boolean|string {
     try {
       let _params: any = this.prepareParams(params);
       if (_params) {
@@ -603,6 +603,6 @@ if (
  * Export single AnimationFrame instance
  */
 root.AnimationFrame = new AnimationFrame();
-let _AnimationFrame = root.AnimationFrame;
+let _AnimationFrame: IAnimationFrame = root.AnimationFrame;
 export default _AnimationFrame;
 module.exports = _AnimationFrame;
