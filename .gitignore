@@ -2,6 +2,7 @@
 doc
 dist
 lib/*.js
+*.d.ts
 node_modules
 *.log
 *.xml
