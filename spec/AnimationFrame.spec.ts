@@ -71,23 +71,25 @@ describe("AnimationFrame", () => {
       root.AnimationFrame.parallelStack,
     ];
 
-    stacksOld = [
-      Object.keys(root._oldAnimationFrame.stack).length,
-      Object.keys(root._oldAnimationFrame.serialStack).length,
-      Object.keys(root._oldAnimationFrame.parallelStack).length,
-    ];
+    if (root._oldAnimationFrame) {
+      stacksOld = [
+        Object.keys(root._oldAnimationFrame.stack).length,
+        Object.keys(root._oldAnimationFrame.serialStack).length,
+        Object.keys(root._oldAnimationFrame.parallelStack).length,
+      ];
 
-    expect(stacksOld[0] === 0).toBeTrue();
-    expect(stacksOld[1] === 0).toBeTrue();
-    expect(stacksOld[2] === 0).toBeTrue();
+      expect(stacksOld[0] === 0).toBeTrue();
+      expect(stacksOld[1] === 0).toBeTrue();
+      expect(stacksOld[2] === 0).toBeTrue();
 
-    for (let i = 0; i < 3; i++) {
-      for (let ID in stacksBefore[i]) {
-        if (stacksBefore[i].hasOwnProperty(ID)) {
-          expect(!!stacksAfter[i][ID]).toBeTrue();
-          for (let prop in stacksAfter[i][ID]) {
-            if (stacksAfter[i][ID].hasOwnProperty(prop)) {
-              expect(stacksBefore[i][ID][prop] === stacksAfter[i][ID][prop]).toBeTrue();
+      for (let i = 0; i < 3; i++) {
+        for (let ID in stacksBefore[i]) {
+          if (stacksBefore[i].hasOwnProperty(ID)) {
+            expect(!!stacksAfter[i][ID]).toBeTrue();
+            for (let prop in stacksAfter[i][ID]) {
+              if (stacksAfter[i][ID].hasOwnProperty(prop)) {
+                expect(stacksBefore[i][ID][prop] === stacksAfter[i][ID][prop]).toBeTrue();
+              }
             }
           }
         }
