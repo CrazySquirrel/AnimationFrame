@@ -27,13 +27,13 @@ setInterval(
         context: root,
         callback: () => {
         },
-        params: []
+        params: [],
       });
       AnimationFrame.serialSubscribe({
         context: root,
         callback: () => {
         },
-        params: []
+        params: [],
       });
     },
     1
@@ -43,9 +43,9 @@ describe("AnimationFrame", () => {
   jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
   let resetAnimationFrame = () => {
-    let stacksBefore: any = [{}, {}, {}];
-    let stacksAfter: any = [{}, {}, {}];
-    let stacksOld: any = [0, 0, 0];
+    let stacksBefore: any;
+    let stacksAfter: any;
+    let stacksOld: any;
 
     stacksBefore = [
       root.AnimationFrame.stack,
@@ -83,9 +83,13 @@ describe("AnimationFrame", () => {
 
     for (let i = 0; i < 3; i++) {
       for (let ID in stacksBefore[i]) {
-        expect(!!stacksAfter[i][ID]).toBeTrue();
-        for (let prop in stacksAfter[i][ID]) {
-          expect(stacksBefore[i][ID][prop] === stacksAfter[i][ID][prop]).toBeTrue();
+        if (stacksBefore[i].hasOwnProperty(ID)) {
+          expect(!!stacksAfter[i][ID]).toBeTrue();
+          for (let prop in stacksAfter[i][ID]) {
+            if (stacksAfter[i][ID].hasOwnProperty(prop)) {
+              expect(stacksBefore[i][ID][prop] === stacksAfter[i][ID][prop]).toBeTrue();
+            }
+          }
         }
       }
     }
