@@ -71,7 +71,7 @@ class AnimationFrame implements IAnimationFrame {
    * @param ID
    * @return {boolean|string}
    */
-  public subscribe(context: Object = root,
+  public subscribe(context: any = root,
                    callback: Function = () => {
                      return null;
                    },
@@ -105,7 +105,7 @@ class AnimationFrame implements IAnimationFrame {
    * @param params
    * @return {boolean|string}
    */
-  public parallelSubscribe(params): boolean|string {
+  public parallelSubscribe(params: any): boolean|string {
     try {
       let _params: any = this.prepareParams(params);
       if (_params) {
@@ -140,7 +140,7 @@ class AnimationFrame implements IAnimationFrame {
    * @param params
    * @return {boolean|string}
    */
-  public serialSubscribe(params): boolean|string {
+  public serialSubscribe(params: any): boolean|string {
     try {
       let _params: any = this.prepareParams(params);
       if (_params) {
@@ -262,7 +262,7 @@ class AnimationFrame implements IAnimationFrame {
    * @param _params
    * @return {boolean}
    */
-  public prepareParams(_params): boolean|string {
+  public prepareParams(_params: any): boolean|string {
     if (
         typeof _params === "object"
     ) {
@@ -454,155 +454,16 @@ class AnimationFrame implements IAnimationFrame {
   /**
    * Error Handler
    */
-  public _errorHandler(e) {
+  public _errorHandler(e): void {
     if (this.errorHandler) {
       this.errorHandler(e);
     }
   }
 }
 /**
- * Check version
- */
-function version_lt(v1, v2) {
-  if (
-      typeof v1 === "string" &&
-      typeof v2 === "string"
-  ) {
-    v1 = v1.trim().split(".");
-    v2 = v2.trim().split(".");
-    for (let i = 0; i < v1.length; i++) {
-      v1[i] = v1[i] || 0;
-      v2[i] = v2[i] || 0;
-      if (v1[i] > v2[i]) {
-        return false;
-      } else if (v1[i] < v2[i]) {
-        return true;
-      }
-    }
-  }
-  return false;
-}
-/**
- * Create single request animation frame object
- * @type {AnimationFrame}
- */
-if (
-    !root.AnimationFrame || !root.AnimationFrame.version ||
-    version_lt(root.AnimationFrame.version, VERSION)
-) {
-  Object.defineProperty(root, "AnimationFrame", {
-    configurable: true,
-    enumerable: false,
-    get: () => {
-      root._AnimationFrame = root._AnimationFrame || new AnimationFrame();
-      return root._AnimationFrame;
-    },
-    set: (v) => {
-      if (!root._AnimationFrame) {
-        /**
-         * root._AnimationFrame was empty and can be set
-         */
-        root._AnimationFrame = v;
-      } else if (
-          !root._AnimationFrame.version ||
-          version_lt(root._AnimationFrame.version, v.version)
-      ) {
-        /**
-         * Saved old animation frame
-         */
-        root._oldAnimationFrame = root._AnimationFrame;
-        /**
-         * Stop old watchers
-         */
-        root._oldAnimationFrame.parallelWatch = () => {
-        };
-        root._oldAnimationFrame.serialWatch = () => {
-        };
-        root._oldAnimationFrame.watch = () => {
-        };
-        /**
-         * Overridable subscription methods
-         */
-        root._oldAnimationFrame.subscribe = v.subscribe;
-        root._oldAnimationFrame.parallelSubscribe = v.parallelSubscribe;
-        root._oldAnimationFrame.serialSubscribe = v.serialSubscribe;
-        /**
-         * Freeze old stacks
-         */
-        if (root._oldAnimationFrame.parallelStack) {
-          Object.preventExtensions(root._oldAnimationFrame.parallelStack);
-        }
-        if (root._oldAnimationFrame.stack) {
-          Object.preventExtensions(root._oldAnimationFrame.stack);
-        }
-        if (root._oldAnimationFrame.serialStack) {
-          Object.preventExtensions(root._oldAnimationFrame.serialStack);
-        }
-        /**
-         * In root._AnimationFrame was previous version and it should migrate
-         */
-        root._AnimationFrame = v;
-        /**
-         * Migrate subscriptions
-         */
-        if (typeof root._oldAnimationFrame.parallelStack === "object") {
-          /**
-           * Migrate parallel subscriptions
-           */
-          for (let ID in root._oldAnimationFrame.parallelStack) {
-            if (root._oldAnimationFrame.parallelStack.hasOwnProperty(ID)) {
-              root._AnimationFrame.parallelSubscribe({
-                callback: root._oldAnimationFrame.parallelStack[ID].callback,
-                context: root._oldAnimationFrame.parallelStack[ID].context,
-                params: root._oldAnimationFrame.parallelStack[ID].params,
-                ID,
-              });
-              root._oldAnimationFrame.parallelUnsubscribe(ID);
-              delete root._oldAnimationFrame.parallelStack[ID];
-            }
-          }
-        } else if (typeof root._oldAnimationFrame.stack === "object") {
-          /**
-           * Migrate serial subscriptions
-           */
-          for (let ID in root._oldAnimationFrame.stack) {
-            if (root._oldAnimationFrame.stack.hasOwnProperty(ID)) {
-              root._AnimationFrame.subscribe(
-                  root._oldAnimationFrame.stack[ID].context,
-                  root._oldAnimationFrame.stack[ID].callback,
-                  root._oldAnimationFrame.stack[ID].params,
-                  root._oldAnimationFrame.stack[ID].ID
-              );
-              root._oldAnimationFrame.unsubscribe(ID);
-              delete root._oldAnimationFrame.stack[ID];
-            }
-          }
-        }
-        if (typeof root._oldAnimationFrame.serialStack === "object") {
-          /**
-           * Migrate serial subscriptions
-           */
-          for (let ID in root._oldAnimationFrame.serialStack) {
-            if (root._oldAnimationFrame.serialStack.hasOwnProperty(ID)) {
-              root._AnimationFrame.serialSubscribe({
-                callback: root._oldAnimationFrame.serialStack[ID].callback,
-                context: root._oldAnimationFrame.serialStack[ID].context,
-                params: root._oldAnimationFrame.serialStack[ID].params,
-                ID,
-              });
-              root._oldAnimationFrame.serialUnsubscribe(ID);
-              delete root._oldAnimationFrame.serialStack[ID];
-            }
-          }
-        }
-      }
-    },
-  });
-}
-/**
  * Export single AnimationFrame instance
  */
 root.AnimationFrame = new AnimationFrame();
-let _AnimationFrame = root.AnimationFrame;
+let _AnimationFrame: IAnimationFrame = root.AnimationFrame;
 export default _AnimationFrame;
 module.exports = _AnimationFrame;

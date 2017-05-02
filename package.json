@@ -1,7 +1,6 @@
 {
   "name": "AnimationFrame",
   "version": "1.0.41",
-  "main": "./lib/AnimationFrame.js",
   "description": "This is the class for signing several watcher on requestanimationframe.",
   "keywords": [
     "TypeScript",
@@ -9,11 +8,25 @@
     "watchers",
     "animations"
   ],
-  "author": "Sergey Yastrebov <info@crazysquirrel.ru>",
+  "homepage": "https://github.com/CrazySquirrel/AnimationFrame",
+  "bugs": {
+    "url": "https://github.com/CrazySquirrel/AnimationFrame/issues",
+    "email": "info@crazysquirrel.ru"
+  },
   "license": "MIT",
+  "author": "Sergey Yastrebov <info@crazysquirrel.ru>",
+  "main": "./lib/AnimationFrame.js",
+  "module": "./lib/AnimationFrame.js",
+  "browser": "./lib/AnimationFrame.js",
+  "jsnext:main": "./lib/AnimationFrame.js",
+  "types": "./lib/AnimationFrame.d.ts",
+  "bin": {
+    "AnimationFrame": "./lib/AnimationFrame.js"
+  },
+  "man": "./README.md",
   "repository": {
     "type": "git",
-    "url": "git@github.com:CrazySquirrel/AnimationFrame.git"
+    "url": "https://github.com/CrazySquirrel/AnimationFrame"
   },
   "scripts": {
     "development": "NODE_ENV=development webpack --bail --config=webpack.build.config.js",
@@ -37,6 +50,9 @@
     "env": {
       "es6": true
     }
+  },
+  "dependencies": {
+    "promise-polyfill": "^6.0.2"
   },
   "devDependencies": {
     "babel-core": "^6.14.0",
@@ -79,9 +95,6 @@
     "typescript": "^2.0.9",
     "webpack": "^1.13.3",
     "webpack-notifier": "^1.4.1"
-  },
-  "dependencies": {
-    "promise-polyfill": "^6.0.2"
   },
   "config": {
     "commitizen": {
