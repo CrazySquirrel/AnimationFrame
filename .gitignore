@@ -3,8 +3,6 @@ doc
 dist
 lib/*.js
 node_modules
-package.ts
-package.d.ts
 *.log
 *.DS_Store
 *.map
