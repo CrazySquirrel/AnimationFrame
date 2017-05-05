@@ -1,6 +1,6 @@
 {
   "name": "AnimationFrame",
-  "version": "1.0.47",
+  "version": "1.0.48",
   "description": "This is the class for signing several watcher on requestanimationframe.",
   "keywords": [
     "TypeScript",
