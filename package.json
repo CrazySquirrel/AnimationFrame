@@ -34,7 +34,7 @@
     "development:watch": "npm run prepare && NODE_ENV=development webpack --bail --config=webpack.build.config.js",
     "production": "npm run prepare && NODE_ENV=production webpack --bail --config=webpack.build.config.js",
     "production:watch": "npm run prepare && NODE_ENV=production:watch webpack --config=webpack.build.config.js --watch",
-    "production:stat": "npm run prepare && NODE_ENV=production:stat webpack --config=webpack.build.config.js --watch",
+    "production:stat": "npm run prepare && NODE_ENV=production:stat webpack --config=webpack.build.config.js",
     "testing": "npm run prepare && NODE_ENV=testing webpack --bail --config=webpack.build.config.js",
     "testing:watch": "npm run prepare && NODE_ENV=testing:watch webpack --config=webpack.build.config.js --watch",
     "test": "rm -rf ./doc/report/ && rm -rf ./doc/coverage/ && NODE_ENV=testing karma start karma.conf.js",
