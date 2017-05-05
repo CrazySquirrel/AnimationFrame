@@ -63,9 +63,9 @@ function bind(b) {
   /**
    * let Array slice function
    */
-  let a = Array.prototype.slice;
-  let f = a.call(arguments, 1);
-  let e = this;
+  const a = Array.prototype.slice;
+  const f = a.call(arguments, 1);
+  const e = this;
 
   function c() {
   }
@@ -91,8 +91,9 @@ Function.prototype.bind = Function.prototype.bind || bind;
  * Object.keys polyfill
  */
 function keys() {
-  let hasDoNotEnumBug = !({toString: null}).propertyIsEnumerable("toString");
-  let doNotEnums = [
+  const hasDoNotEnumBug = !({toString: null}).propertyIsEnumerable("toString");
+
+  const doNotEnums = [
     "toString",
     "toLocaleString",
     "valueOf",
@@ -101,7 +102,8 @@ function keys() {
     "propertyIsEnumerable",
     "constructor",
   ];
-  let doNotEnumsLength = doNotEnums.length;
+
+  const doNotEnumsLength = doNotEnums.length;
 
   return (
       (obj) => {
@@ -109,9 +111,9 @@ function keys() {
           throw new TypeError("Object.keys called on non-object");
         }
 
-        let result = [];
+        const result = [];
 
-        for (let prop in obj) {
+        for (const prop in obj) {
           if (Object.prototype.hasOwnProperty.call(obj, prop)) {
             result.push(prop);
           }
@@ -124,6 +126,7 @@ function keys() {
             }
           }
         }
+
         return result;
       }
   );

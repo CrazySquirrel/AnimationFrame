@@ -11,7 +11,7 @@ declare let global: any;
 declare let module: any;
 declare let require: any;
 
-let _package = require("../package.json");
+import _package from "../package";
 
 const VERSION = _package.version;
 
@@ -72,10 +72,10 @@ class AnimationFrame implements IAnimationFrame {
    * @return {boolean|string}
    */
   public subscribe(context: any = root,
-                   callback: Function = () => {
+                   callback: any = () => {
                      return null;
                    },
-                   params: Array<any> = [],
+                   params: any[] = [],
                    ID?: string): boolean|string {
     try {
       return this.parallelSubscribe({
@@ -107,7 +107,7 @@ class AnimationFrame implements IAnimationFrame {
    */
   public parallelSubscribe(params: any): boolean|string {
     try {
-      let _params: any = this.prepareParams(params);
+      const _params: any = this.prepareParams(params);
       if (_params) {
         /**
          * Add method to the stack
@@ -142,7 +142,7 @@ class AnimationFrame implements IAnimationFrame {
    */
   public serialSubscribe(params): boolean|string {
     try {
-      let _params: any = this.prepareParams(params);
+      const _params: any = this.prepareParams(params);
       if (_params) {
         /**
          * Add method to the stack
@@ -334,7 +334,7 @@ class AnimationFrame implements IAnimationFrame {
         /**
          * Loop all methods in stack
          */
-        for (let parallelID in this.parallelStack) {
+        for (const parallelID in this.parallelStack) {
           /**
            * Process only methods without extended properties
            */
@@ -351,7 +351,7 @@ class AnimationFrame implements IAnimationFrame {
                 /**
                  * Get subscribed method params by ID
                  */
-                let objCall = this.parallelStack[parallelID];
+                const objCall = this.parallelStack[parallelID];
                 /**
                  * If params exist, it is an object, and it is contains call context,
                  * callback, and parameters which is array
@@ -396,7 +396,7 @@ class AnimationFrame implements IAnimationFrame {
           this.serialStack &&
           typeof this.serialStack === "object"
       ) {
-        let keys = Object.keys(this.serialStack);
+        const keys = Object.keys(this.serialStack);
         if (
             keys &&
             keys.length > 0
@@ -405,7 +405,7 @@ class AnimationFrame implements IAnimationFrame {
             this.serialID = 0;
           }
 
-          let _serialID = keys[this.serialID];
+          const _serialID = keys[this.serialID];
 
           this.serialID++;
           /**
@@ -422,7 +422,7 @@ class AnimationFrame implements IAnimationFrame {
               /**
                * Get subscribed method params by ID
                */
-              let objCall = this.serialStack[_serialID];
+              const objCall = this.serialStack[_serialID];
               /**
                * If params exist, it is an object, and it is contains call context,
                * callback, and parameters which is array
@@ -549,7 +549,7 @@ if (
           /**
            * Migrate parallel subscriptions
            */
-          for (let ID in root._oldAnimationFrame.parallelStack) {
+          for (const ID in root._oldAnimationFrame.parallelStack) {
             if (root._oldAnimationFrame.parallelStack.hasOwnProperty(ID)) {
               root._AnimationFrame.parallelSubscribe({
                 callback: root._oldAnimationFrame.parallelStack[ID].callback,
@@ -565,13 +565,13 @@ if (
           /**
            * Migrate serial subscriptions
            */
-          for (let ID in root._oldAnimationFrame.stack) {
+          for (const ID in root._oldAnimationFrame.stack) {
             if (root._oldAnimationFrame.stack.hasOwnProperty(ID)) {
               root._AnimationFrame.subscribe(
                   root._oldAnimationFrame.stack[ID].context,
                   root._oldAnimationFrame.stack[ID].callback,
                   root._oldAnimationFrame.stack[ID].params,
-                  root._oldAnimationFrame.stack[ID].ID
+                  root._oldAnimationFrame.stack[ID].ID,
               );
               root._oldAnimationFrame.unsubscribe(ID);
               delete root._oldAnimationFrame.stack[ID];
@@ -582,7 +582,7 @@ if (
           /**
            * Migrate serial subscriptions
            */
-          for (let ID in root._oldAnimationFrame.serialStack) {
+          for (const ID in root._oldAnimationFrame.serialStack) {
             if (root._oldAnimationFrame.serialStack.hasOwnProperty(ID)) {
               root._AnimationFrame.serialSubscribe({
                 callback: root._oldAnimationFrame.serialStack[ID].callback,
@@ -603,6 +603,7 @@ if (
  * Export single AnimationFrame instance
  */
 root.AnimationFrame = new AnimationFrame();
-let _AnimationFrame: IAnimationFrame = root.AnimationFrame;
+
+const _AnimationFrame: IAnimationFrame = root.AnimationFrame;
 export default _AnimationFrame;
 module.exports = _AnimationFrame;

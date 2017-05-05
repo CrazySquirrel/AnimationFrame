@@ -1,5 +1,4 @@
 "use strict";
-declare let require: any;
 require("./index.html");
 
 let AnimationFrame = require("../../lib/AnimationFrame.ts");

@@ -9,9 +9,9 @@ declare let global: any;
 declare let require: any;
 declare let jasmine: any;
 
-let _package = require("../package.json");
+import _package from "../package";
 
-let version = _package.version.split(".").map((v) => {
+const version = _package.version.split(".").map((v) => {
   return parseInt(v, 10);
 });
 
@@ -36,13 +36,13 @@ setInterval(
         params: [],
       });
     },
-    1
+    1,
 );
 
 describe("AnimationFrame", () => {
   jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
-  let resetAnimationFrame = () => {
+  const resetAnimationFrame = () => {
     let stacksBefore: any;
     let stacksAfter: any;
     let stacksOld: any;
@@ -83,10 +83,10 @@ describe("AnimationFrame", () => {
       expect(stacksOld[2] === 0).toBeTrue();
 
       for (let i = 0; i < 3; i++) {
-        for (let ID in stacksBefore[i]) {
+        for (const ID in stacksBefore[i]) {
           if (stacksBefore[i].hasOwnProperty(ID)) {
             expect(!!stacksAfter[i][ID]).toBeTrue();
-            for (let prop in stacksAfter[i][ID]) {
+            for (const prop in stacksAfter[i][ID]) {
               if (stacksAfter[i][ID].hasOwnProperty(prop)) {
                 expect(stacksBefore[i][ID][prop] === stacksAfter[i][ID][prop]).toBeTrue();
               }
@@ -106,16 +106,16 @@ describe("AnimationFrame", () => {
     dataSet = [];
   });
 
-  let test = (subscribeMethod,
-              unsubscribeMethod,
-              watchMethod,
-              subscribeStack,
-              clean) => {
+  const test = (subscribeMethod,
+                unsubscribeMethod,
+                watchMethod,
+                subscribeStack,
+                clean) => {
     return new Promise((resolve, reject) => {
 
-      for (let x1 of paramsValues) {
-        for (let x2 of paramsValues) {
-          for (let x3 of paramsValues) {
+      for (const x1 of paramsValues) {
+        for (const x2 of paramsValues) {
+          for (const x3 of paramsValues) {
             for (let x4 of paramsValues) {
               if (
                   [x2, x3, x4].indexOf(x1) === -1 &&
@@ -126,7 +126,7 @@ describe("AnimationFrame", () => {
                 if (typeof x4 === "string") {
                   x4 = AnimationFrame.getID();
                 }
-                let cond = (
+                const cond = (
                     (typeof x1 === "object" || !x1) &&
                     (typeof x2 === "function" || !x2) &&
                     (Array.isArray(x3) || !x3) &&
@@ -142,9 +142,9 @@ describe("AnimationFrame", () => {
         }
       }
 
-      let promises = [];
+      const promises = [];
 
-      for (let set of dataSet) {
+      for (const set of dataSet) {
         promises.push(new Promise((_resolve) => {
           let result;
 
@@ -190,7 +190,7 @@ describe("AnimationFrame", () => {
                     expect(Object.keys(subscribeStack)).not.toContain(result);
                     _resolve();
                   },
-                  1000
+                  1000,
               );
             } else {
               _resolve();
@@ -219,7 +219,7 @@ describe("AnimationFrame", () => {
         AnimationFrame.unsubscribe,
         AnimationFrame.watch,
         AnimationFrame.stack,
-        false
+        false,
     ).then(done).catch(done);
   });
 
@@ -230,7 +230,7 @@ describe("AnimationFrame", () => {
         AnimationFrame.unsubscribe,
         AnimationFrame.watch,
         AnimationFrame.stack,
-        true
+        true,
     ).then(done).catch(done);
   });
 
@@ -241,7 +241,7 @@ describe("AnimationFrame", () => {
         AnimationFrame.serialUnsubscribe,
         AnimationFrame.serialWatch,
         AnimationFrame.serialStack,
-        false
+        false,
     ).then(done).catch(done);
   });
 
@@ -252,7 +252,7 @@ describe("AnimationFrame", () => {
         AnimationFrame.serialUnsubscribe,
         AnimationFrame.serialWatch,
         AnimationFrame.serialStack,
-        true
+        true,
     ).then(done).catch(done);
   });
 
@@ -263,7 +263,7 @@ describe("AnimationFrame", () => {
         AnimationFrame.parallelUnsubscribe,
         AnimationFrame.parallelWatch,
         AnimationFrame.parallelStack,
-        false
+        false,
     ).then(done).catch(done);
   });
 
@@ -274,7 +274,7 @@ describe("AnimationFrame", () => {
         AnimationFrame.parallelUnsubscribe,
         AnimationFrame.parallelWatch,
         AnimationFrame.parallelStack,
-        true
+        true,
     ).then(done).catch(done);
   });
 });
