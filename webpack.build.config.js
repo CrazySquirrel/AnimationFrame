@@ -42,12 +42,20 @@ let objBuildList = {};
 objBuildList = Object.assign(
     objBuildList,
     {
-      "./lib/AnimationFrame": ["./lib/AnimationFrame.ts"],
-      "./dist/simple-typescript-example/index": ["./src/simple-typescript-example/index.ts"],
-      "./dist/simple-javascript-example/index": ["./src/simple-javascript-example/index.ts"],
-      "./dist/test-scope/index": ["./src/test-scope/index.ts"]
+      "./lib/AnimationFrame": ["./lib/AnimationFrame.ts"]
     }
 );
+
+if (MODE_2 !== "stat") {
+  objBuildList = Object.assign(
+      objBuildList,
+      {
+        "./dist/simple-typescript-example/index": ["./src/simple-typescript-example/index.ts"],
+        "./dist/simple-javascript-example/index": ["./src/simple-javascript-example/index.ts"],
+        "./dist/test-scope/index": ["./src/test-scope/index.ts"]
+      }
+  );
+}
 
 /**
  * Plugins list

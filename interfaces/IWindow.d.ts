@@ -7,15 +7,15 @@ import IAnimationFrame from "./IAnimationFrame";
  */
 interface IWindow {
     console?: any;
-    requestAnimationFrame?: Function;
-    webkitRequestAnimationFrame?: Function;
-    mozRequestAnimationFrame?: Function;
-    oRequestAnimationFrame?: Function;
-    msRequestAnimationFrame?: Function;
+    requestAnimationFrame?: any;
+    webkitRequestAnimationFrame?: any;
+    mozRequestAnimationFrame?: any;
+    oRequestAnimationFrame?: any;
+    msRequestAnimationFrame?: any;
     Promise?: Promise<any>;
     AnimationFrame?: IAnimationFrame;
     _AnimationFrame?: IAnimationFrame;
     _oldAnimationFrame?: IAnimationFrame;
-    setTimeout?(callback: Function, time: number): number;
+    setTimeout?(callback: any, time: number): number;
 }
 export default IWindow;
