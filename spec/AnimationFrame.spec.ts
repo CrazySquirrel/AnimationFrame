@@ -113,10 +113,18 @@ describe("AnimationFrame", () => {
                 clean) => {
     return new Promise((resolve, reject) => {
 
-      for (const x1 of paramsValues) {
-        for (const x2 of paramsValues) {
-          for (const x3 of paramsValues) {
-            for (let x4 of paramsValues) {
+      for (let i1 = 0; i1 < paramsValues.length; i1++) {
+        const x1 = paramsValues[i1];
+
+        for (let i2 = 0; i2 < paramsValues.length; i2++) {
+          const x2 = paramsValues[i2];
+
+          for (let i3 = 0; i3 < paramsValues.length; i3++) {
+            const x3 = paramsValues[i3];
+
+            for (let i4 = 0; i4 < paramsValues.length; i4++) {
+              let x4 = paramsValues[i4];
+
               if (
                   [x2, x3, x4].indexOf(x1) === -1 &&
                   [x1, x3, x4].indexOf(x2) === -1 &&
@@ -144,7 +152,9 @@ describe("AnimationFrame", () => {
 
       const promises = [];
 
-      for (const set of dataSet) {
+      for (let j = 0; j < dataSet.length; j++) {
+        const set = dataSet[j];
+
         promises.push(new Promise((_resolve) => {
           let result;
 
