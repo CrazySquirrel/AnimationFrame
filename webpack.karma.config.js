@@ -113,7 +113,10 @@ module.exports = {
   module: {
     loaders: [
       {
-        test: /lib\/(.*)\.ts(x?)$/,
+        test: /\.ts(x?)$/,
+        include: [
+          path.resolve(__dirname, "lib")
+        ],
         use: [
           {
             loader: replacements
@@ -131,24 +134,10 @@ module.exports = {
         ]
       },
       {
-        test: /(spec|src|polyfills)\/(.*)\.ts(x?)$/,
-        use: [
-          {
-            loader: replacements
-          },
-          {
-            loader: "babel-loader",
-            options: {
-              presets: ["es2015"]
-            }
-          },
-          {
-            loader: "ts-loader"
-          }
-        ]
-      },
-      {
-        test: /package\.ts(x?)$/,
+        test: /\.ts(x?)$/,
+        exclude: [
+          path.resolve(__dirname, "lib")
+        ],
         use: [
           {
             loader: replacements

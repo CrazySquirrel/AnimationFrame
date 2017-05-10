@@ -1,4 +1,4 @@
 
-const PACKAGE = {"name":"AnimationFrame","version":"1.0.49"};
+const PACKAGE = {"name":"AnimationFrame","version":"1.0.50"};
 export default PACKAGE;
 module.exports = PACKAGE;
