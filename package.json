@@ -31,7 +31,7 @@
   "scripts": {
     "prepare": "node ./bin/package_prepare.js",
     "development": "npm run prepare && NODE_ENV=development webpack --bail --config=webpack.build.config.js",
-    "development:watch": "npm run prepare && NODE_ENV=development:watch webpack --bail --config=webpack.build.config.js",
+    "development:watch": "npm run prepare && NODE_ENV=development:watch webpack --config=webpack.build.config.js --watch",
     "production": "npm run prepare && NODE_ENV=production webpack --bail --config=webpack.build.config.js",
     "production:watch": "npm run prepare && NODE_ENV=production:watch webpack --config=webpack.build.config.js --watch",
     "production:stat": "npm run prepare && NODE_ENV=production:stat webpack --config=webpack.build.config.js",
