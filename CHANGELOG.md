@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.0.52"></a>
+## [1.0.52](https://github.com/CrazySquirrel/AnimationFrame/compare/v1.0.51...v1.0.52) (2017-05-12)
+
+
+### Bug Fixes
+
+* **Log:** Additional logs ([d03b18e](https://github.com/CrazySquirrel/AnimationFrame/commit/d03b18e))
+
+
+
 <a name="1.0.51"></a>
 ## [1.0.51](https://github.com/CrazySquirrel/AnimationFrame/compare/v1.0.50...v1.0.51) (2017-05-10)
 
